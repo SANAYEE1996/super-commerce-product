@@ -22,9 +22,9 @@ import java.util.stream.Collectors;
 public class Manager implements UserDetails {
 
     @Id
-    @Column(name = "manager_id")
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long memberId;
+    private Long id;
 
     @Column(name = "email")
     private String managerEmail;

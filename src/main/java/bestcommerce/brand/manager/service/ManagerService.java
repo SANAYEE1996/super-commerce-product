@@ -42,7 +42,7 @@ public class ManagerService {
 
     public Long saveMember(Manager registerManager){
         if(!managerRepository.existsByManagerEmail(registerManager.getManagerEmail())){
-            return managerRepository.save(registerManager).getMemberId();
+            return managerRepository.save(registerManager).getId();
         }
         throw new RuntimeException("등록된 이메일 입니다.");
     }

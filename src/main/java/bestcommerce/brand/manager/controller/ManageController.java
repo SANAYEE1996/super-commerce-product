@@ -9,10 +9,7 @@ import bestcommerce.brand.util.TimeFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -41,6 +38,11 @@ public class ManageController {
                                         .registerDate(LocalDateTime.now().format(TimeFormat.orderLogDateFormat))
                                         .build();
         managerService.saveMember(registerManager);
+    }
+
+    @GetMapping("/test")
+    public String test(){
+        return "LOGIN SUCCESS";
     }
 
 }
