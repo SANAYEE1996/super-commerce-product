@@ -5,6 +5,7 @@ import bestcommerce.brand.manager.dto.LoginDto;
 import bestcommerce.brand.manager.dto.ManagerDto;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.service.ManagerService;
+import bestcommerce.brand.util.TimeFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
@@ -35,7 +38,7 @@ public class ManageController {
                                         .managerPassword(passwordEncoder.encode(managerDto.getPassword()))
                                         .managerName(managerDto.getName())
                                         .contactNumber(managerDto.getContactNumber())
-                                        .registerDate(managerDto.getRegisterDate())
+                                        .registerDate(LocalDateTime.now().format(TimeFormat.orderLogDateFormat))
                                         .build();
         managerService.saveMember(registerManager);
     }
