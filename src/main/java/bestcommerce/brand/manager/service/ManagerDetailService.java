@@ -1,5 +1,6 @@
 package bestcommerce.brand.manager.service;
 
+import bestcommerce.brand.manager.entity.CustomerUserDetails;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,10 +28,6 @@ public class ManagerDetailService implements UserDetailsService {
     }
 
     private UserDetails createUserDetails(Manager manager){
-        return Manager.builder()
-                .managerEmail(manager.getManagerEmail())
-                .managerPassword(manager.getManagerPassword())
-                .roles(manager.getRoles())
-                .build();
+        return new CustomerUserDetails(manager);
     }
 }
