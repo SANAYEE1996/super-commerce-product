@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BrandRegisterDto {
 
-    private Long managerId;
+    private String managerEmail;
 
     private String brandName;
 
@@ -15,8 +15,8 @@ public class BrandRegisterDto {
 
     private String address;
 
-    public BrandRegisterDto(Long managerId, String brandName, String brandIntro, String address) {
-        this.managerId = managerId;
+    public BrandRegisterDto(String managerEmail, String brandName, String brandIntro, String address) {
+        this.managerEmail = managerEmail;
         this.brandName = brandName;
         this.brandIntro = brandIntro;
         this.address = address;

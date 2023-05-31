@@ -27,9 +27,21 @@ public class Brand {
     @Column(name = "business_address")
     private String address;
 
+    @Column(name = "logo_img")
+    private String logo;
+
     @Column(name = "register_date")
     private String registerDate;
 
     @OneToMany(mappedBy = "brand")
     private List<Manager> managerList = new ArrayList<>();
+
+    public Brand(Long id, String name, String intro, String address, String logo, String registerDate) {
+        this.id = id;
+        this.name = name;
+        this.intro = intro;
+        this.address = address;
+        this.logo = logo;
+        this.registerDate = registerDate;
+    }
 }

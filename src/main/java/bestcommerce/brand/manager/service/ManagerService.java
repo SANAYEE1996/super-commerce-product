@@ -5,20 +5,18 @@ import bestcommerce.brand.jwt.TokenInfo;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ManagerService {
-
-    private static final Logger log = LoggerFactory.getLogger(ManagerService.class);
 
     private final ManagerRepository managerRepository;
 
@@ -42,9 +40,14 @@ public class ManagerService {
 
     public Long saveMember(Manager registerManager){
         if(!managerRepository.existsByManagerEmail(registerManager.getManagerEmail())){
+            registerManager.getRoles().add("NONE");
             return managerRepository.save(registerManager).getId();
         }
         throw new RuntimeException("등록된 이메일 입니다.");
+    }
+
+    public void updateMember(Manager updateManager){
+        managerRepository.save(updateManager);
     }
 
     public Manager findManager(String email){

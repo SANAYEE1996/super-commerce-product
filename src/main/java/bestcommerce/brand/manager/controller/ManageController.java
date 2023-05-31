@@ -35,7 +35,7 @@ public class ManageController {
                                         .managerPassword(passwordEncoder.encode(managerDto.getPassword()))
                                         .managerName(managerDto.getName())
                                         .contactNumber(managerDto.getContactNumber())
-                                        .registerDate(LocalDateTime.now().format(TimeFormat.orderLogDateFormat))
+                                        .registerDate(LocalDateTime.now().format(TimeFormat.timeFormatter))
                                         .build();
         managerService.saveMember(registerManager);
     }

@@ -39,10 +39,10 @@ public class ManagerControllerTest {
     @Test
     public void insertAccountInfoTest() throws Exception {
 
-        String email = "dudtkd0219@gmail.com";
+        String email = "nike@gmail.com";
         String password = "1234";
-        String name = "박영상";
-        String number = "010-1234-5678";
+        String name = "나이키 관리자";
+        String number = "010-0001-0001";
 
         ManagerDto dto = new ManagerDto(email,password,name,number,"");
 
