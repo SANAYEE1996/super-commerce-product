@@ -2,8 +2,11 @@ package bestcommerce.brand.manager.service;
 
 import bestcommerce.brand.jwt.JwtTokenProvider;
 import bestcommerce.brand.jwt.TokenInfo;
+import bestcommerce.brand.manager.entity.Brand;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.repository.ManagerRepository;
+import bestcommerce.brand.util.exception.DuplicateBrandManagerException;
+import bestcommerce.brand.util.exception.ManagerException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,20 +41,29 @@ public class ManagerService {
         }
     }
 
-    public Long saveMember(Manager registerManager){
+    public Long saveManager(Manager registerManager){
         if(!managerRepository.existsByManagerEmail(registerManager.getManagerEmail())){
-            registerManager.getRoles().add("NONE");
             return managerRepository.save(registerManager).getId();
         }
         throw new RuntimeException("등록된 이메일 입니다.");
     }
 
-    public void updateMember(Manager updateManager){
-        managerRepository.save(updateManager);
+    public void registerBrand(Manager manager, Brand brand) throws ManagerException {
+        if(manager.getBrand() == null){
+            manager.registerBrand(brand);
+            updateManager(manager);
+            return;
+        }
+        throw new DuplicateBrandManagerException(brand.getId());
     }
+
 
     public Manager findManager(String email){
         return managerRepository.findByManagerEmail(email).orElseThrow(()-> new RuntimeException("등록된 사용자가 아닙니다."));
+    }
+
+    private void updateManager(Manager updateManager){
+        managerRepository.save(updateManager);
     }
 
 }

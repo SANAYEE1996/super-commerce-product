@@ -47,4 +47,7 @@ public class Manager{
     @Builder.Default
     private List<String> roles = new ArrayList<>();
 
+    public void registerBrand(Brand brand){
+        this.brand = brand;
+    }
 }
