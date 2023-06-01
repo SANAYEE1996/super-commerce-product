@@ -5,6 +5,8 @@ import bestcommerce.brand.manager.dto.LoginDto;
 import bestcommerce.brand.manager.dto.ManagerDto;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.service.ManagerService;
+import bestcommerce.brand.manager.service.RoleService;
+import bestcommerce.brand.util.ManagerRole;
 import bestcommerce.brand.util.TimeFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,8 @@ public class ManageController {
 
     private final ManagerService managerService;
 
+    private final RoleService roleService;
+
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/login")
@@ -35,9 +39,11 @@ public class ManageController {
                                         .managerPassword(passwordEncoder.encode(managerDto.getPassword()))
                                         .managerName(managerDto.getName())
                                         .contactNumber(managerDto.getContactNumber())
-                                        .registerDate(LocalDateTime.now().format(TimeFormat.orderLogDateFormat))
+                                        .registerDate(LocalDateTime.now().format(TimeFormat.timeFormatter))
                                         .build();
-        managerService.saveMember(registerManager);
+        managerService.saveManager(registerManager);
+        Manager manager = managerService.findManager(managerDto.getEmail());
+        roleService.addRole(manager.getId(), ManagerRole.NONE.getRole());
     }
 
     @GetMapping("/test")

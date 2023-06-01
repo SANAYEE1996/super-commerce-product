@@ -1,20 +1,19 @@
 package bestcommerce.brand.manager.service;
 
+import bestcommerce.brand.manager.entity.CustomerUserDetails;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.repository.ManagerRepository;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ManagerDetailService implements UserDetailsService {
-
-    private static final Logger log = LoggerFactory.getLogger(ManagerDetailService.class);
 
     private final ManagerRepository managerRepository;
 
@@ -27,10 +26,6 @@ public class ManagerDetailService implements UserDetailsService {
     }
 
     private UserDetails createUserDetails(Manager manager){
-        return Manager.builder()
-                .managerEmail(manager.getManagerEmail())
-                .managerPassword(manager.getManagerPassword())
-                .roles(manager.getRoles())
-                .build();
+        return new CustomerUserDetails(manager);
     }
 }
