@@ -17,7 +17,6 @@ import java.util.List;
 public class Manager{
 
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
