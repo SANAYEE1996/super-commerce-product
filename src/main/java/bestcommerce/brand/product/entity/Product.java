@@ -3,11 +3,14 @@ package bestcommerce.brand.product.entity;
 
 import bestcommerce.brand.manager.entity.Brand;
 import bestcommerce.brand.manager.entity.Manager;
+import bestcommerce.brand.size.entity.Quantity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "product")
 @Getter
@@ -40,6 +43,9 @@ public class Product {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Manager manager;
+
+    @OneToMany(mappedBy = "product")
+    private List<Quantity> quantityList = new ArrayList<>();
 
     public Product(Long id, String productCode, String name, int productPrice, String info, String registerDate, Brand brand, Manager manager) {
         this.id = id;
