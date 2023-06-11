@@ -20,7 +20,7 @@ public class Manager{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String managerEmail;
 
     @Column(name = "password")
