@@ -50,7 +50,7 @@ public class ProductController {
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestPart(value = "productImage", required = false) List<MultipartFile> productImage,
                             @RequestPart(value = "infoImage", required = false) List<MultipartFile> infoImage,
-                            @RequestPart ProductCreateDto productCreateDto){
+                            @RequestPart(name = "productCreateDto") ProductCreateDto productCreateDto){
         Brand brand = brandService.findBrand(productCreateDto.getBrandId());
         Manager manager = managerService.findManager(productCreateDto.getManagerEmail());
         List<QuantityDto> quantityDtoList = productCreateDto.getQuantityDtoList();
@@ -69,6 +69,18 @@ public class ProductController {
         }
         quantityService.saveAll(quantityDtoList);
         return ResponseDto.builder().message("등록 성공").build();
+    }
+
+    @PostMapping(value = "/test")
+    public void test(@RequestPart("productImage") List<MultipartFile> test01,
+                     @RequestPart("infoImage") List<MultipartFile> test02){
+        log.info("success??");
+        for(MultipartFile file : test01){
+            log.info("file .. {}", file.getOriginalFilename());
+        }
+        for(MultipartFile file : test02){
+            log.info("file .. {}", file.getOriginalFilename());
+        }
     }
 
 }

@@ -46,7 +46,7 @@ public class BrandController {
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseDto registerBrand(@RequestPart BrandRegisterDto request, @RequestPart MultipartFile img){
         log.info("file name : {}", img.getOriginalFilename());
-        String fileName = img.getOriginalFilename() + System.currentTimeMillis();
+        String fileName = img.getOriginalFilename() +"_"+ System.currentTimeMillis();
         Manager manager = managerService.findManager(request.getManagerEmail());
         if(!isBrandRegisterManager(manager)){
             return ResponseDto.builder().message("등록 할 수 없는 계정").responseStatus(ResponseStatus.OK).build();

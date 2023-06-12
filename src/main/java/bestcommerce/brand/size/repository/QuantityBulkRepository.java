@@ -19,7 +19,7 @@ public class QuantityBulkRepository {
 
     @Transactional
     public void saveAll(List<QuantityDto> quantityDtoList){
-        String sql = "INSERT INTO quantity (product_id, measureName, remain) " +
+        String sql = "INSERT INTO quantity (product_id, measure_name, remain) " +
                      "VALUES (?, ?, ?) ";
 
         jdbcTemplate.batchUpdate(sql,

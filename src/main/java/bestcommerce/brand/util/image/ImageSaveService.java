@@ -32,7 +32,7 @@ public class ImageSaveService {
     }
 
     private void saveImage(AmazonS3Client amazonS3Client, MultipartFile img, List<ProductImageDto> list, Long productId, String type, int odr) throws IOException {
-        String fileName = img.getOriginalFilename() + System.currentTimeMillis();
+        String fileName = img.getOriginalFilename() +"_"+ System.currentTimeMillis();
         log.info("file name : {}", fileName);
         list.add(new ProductImageDto(productId, type, fileName, odr));
         ObjectMetadata metadata= new ObjectMetadata();
