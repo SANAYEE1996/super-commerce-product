@@ -5,6 +5,7 @@ import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.service.BrandService;
 import bestcommerce.brand.manager.service.ManagerService;
 import bestcommerce.brand.product.dto.ProductCreateDto;
+import bestcommerce.brand.product.dto.ProductRequestDto;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.product.dto.ProductImageDto;
 import bestcommerce.brand.product.service.ProductImageService;
@@ -69,6 +70,11 @@ public class ProductController {
         }
         quantityService.saveAll(quantityDtoList);
         return ResponseDto.builder().message("등록 성공").build();
+    }
+
+    @PostMapping(value = "/detail/view")
+    public void detailView(@RequestBody ProductRequestDto dto){
+
     }
 
     @PostMapping(value = "/test")
