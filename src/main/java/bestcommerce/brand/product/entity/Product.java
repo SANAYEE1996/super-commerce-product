@@ -47,6 +47,9 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<Quantity> quantityList = new ArrayList<>();
 
+    @OneToMany(mappedBy = "product")
+    private List<ProductImage> imageList = new ArrayList<>();
+
     public Product(Long id, String productCode, String name, int productPrice, String info, String registerDate, Brand brand, Manager manager) {
         this.id = id;
         this.productCode = productCode;
