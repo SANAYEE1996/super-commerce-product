@@ -21,4 +21,8 @@ public class QuantityService {
     public void saveAll(List<QuantityDto> quantityDtoList){
         quantityBulkRepository.saveAll(quantityDtoList);
     }
+
+    public Long verifyQuantity(Long quantityId){
+        return quantityRepository.findById(quantityId).orElseThrow(()->new RuntimeException("Not enrolled Quantity Id")).getId();
+    }
 }

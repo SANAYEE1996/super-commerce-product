@@ -1,19 +1,21 @@
 package bestcommerce.brand.size.service;
 
-import bestcommerce.brand.size.entity.Size;
-import bestcommerce.brand.size.repository.SizeRepository;
+import bestcommerce.brand.size.dto.SizeDto;
+import bestcommerce.brand.size.repository.SizeBulkRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SizeService {
 
-    private final SizeRepository sizeRepository;
+    private final SizeBulkRepository sizeBulkRepository;
 
-    public Long save(Size size){
-        return sizeRepository.save(size).getId();
+    public void saveAll(List<SizeDto> sizeDtoList){
+        sizeBulkRepository.saveAll(sizeDtoList);
     }
 }
