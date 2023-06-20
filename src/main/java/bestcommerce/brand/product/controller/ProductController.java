@@ -5,12 +5,14 @@ import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.service.BrandService;
 import bestcommerce.brand.manager.service.ManagerService;
 import bestcommerce.brand.product.dto.*;
+import bestcommerce.brand.product.entity.Product;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.product.service.ProductImageService;
 import bestcommerce.brand.product.service.ProductService;
 import bestcommerce.brand.size.dto.SizeDto;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.size.service.SizeService;
+import bestcommerce.brand.util.DtoConverter;
 import bestcommerce.brand.util.EntityConverter;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
@@ -49,6 +51,8 @@ public class ProductController {
 
     private final EntityConverter entityConverter;
 
+    private final DtoConverter dtoConverter;
+
 
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestPart(value = "productImage", required = false) List<MultipartFile> productImage,
@@ -75,10 +79,13 @@ public class ProductController {
     }
 
     @PostMapping(value = "/detail/view")
-    public ProductDto detailView(@RequestBody ProductRequestDto dto){
-        ProductDetailDto productDetailDto = productService.getDetailProduct(dto.getProductId());
+    public ProductDetailDto detailView(@RequestBody ProductRequestDto dto){
+        Product product = productService.findProduct(dto.getProductId());
+        ProductInfoDto productInfoDto = productService.getDetailProduct(dto.getProductId());
+        List<QuantityDto> quantityDtoList = dtoConverter.toQuantityDtoList(quantityService.findQuantityList(product));
         List<SizeDto> sizeDtoList = sizeService.getSizeList(dto.getProductId());
-        return new ProductDto(productDetailDto, sizeDtoList);
+        List<ProductImageDto> productImageDtoList = dtoConverter.toProductImageDtoList(productImageService.getProductImageList(product));
+        return new ProductDetailDto(productInfoDto, quantityDtoList, sizeDtoList, productImageDtoList);
     }
 
     @PostMapping(value = "/test")

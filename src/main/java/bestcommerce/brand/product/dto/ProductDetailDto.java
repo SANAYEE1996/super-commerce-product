@@ -1,39 +1,27 @@
 package bestcommerce.brand.product.dto;
 
+import bestcommerce.brand.size.dto.QuantityDto;
+import bestcommerce.brand.size.dto.SizeDto;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import java.util.List;
+
 
 @Getter
-@NoArgsConstructor
 public class ProductDetailDto {
 
-    private Long id;
+    private ProductInfoDto productInfoDto;
 
-    private String productCode;
+    private List<QuantityDto> quantityDtoList;
 
-    private String productName;
+    private List<SizeDto> sizeDtoList;
 
-    private int productPrice;
+    private List<ProductImageDto> productImageDtoList;
 
-    private String productInfo;
-
-    private String productRegisterDate;
-
-    private Long brandId;
-
-    private String brandName;
-
-    private String brandLogoImage;
-
-    public ProductDetailDto(Long id, String productCode, String productName, int productPrice, String productInfo, String productRegisterDate, Long brandId, String brandName, String brandLogoImage) {
-        this.id = id;
-        this.productCode = productCode;
-        this.productName = productName;
-        this.productPrice = productPrice;
-        this.productInfo = productInfo;
-        this.productRegisterDate = productRegisterDate;
-        this.brandId = brandId;
-        this.brandName = brandName;
-        this.brandLogoImage = brandLogoImage;
+    public ProductDetailDto(ProductInfoDto productInfoDto, List<QuantityDto> quantityDtoList, List<SizeDto> sizeDtoList, List<ProductImageDto> productImageDtoList) {
+        this.productInfoDto = productInfoDto;
+        this.quantityDtoList = quantityDtoList;
+        this.sizeDtoList = sizeDtoList;
+        this.productImageDtoList = productImageDtoList;
     }
 }

@@ -1,6 +1,6 @@
 package bestcommerce.brand.product.repository;
 
-import bestcommerce.brand.product.dto.ProductDetailDto;
+import bestcommerce.brand.product.dto.ProductInfoDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +18,12 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
     private final JPAQueryFactory queryFactory;
 
     public ProductRepositorySupport(JPAQueryFactory queryFactory) {
-        super(ProductDetailDto.class);
+        super(ProductInfoDto.class);
         this.queryFactory = queryFactory;
     }
 
-    public ProductDetailDto getDetailProductDetail(Long productId){
-        return queryFactory.select(Projections.constructor(ProductDetailDto.class,
+    public ProductInfoDto getDetailProductDetail(Long productId){
+        return queryFactory.select(Projections.constructor(ProductInfoDto.class,
                     product.id.as("id"),
                     product.productCode.as("productCode"),
                     product.name.as("productName"),
