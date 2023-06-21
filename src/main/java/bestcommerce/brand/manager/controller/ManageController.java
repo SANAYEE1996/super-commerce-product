@@ -7,6 +7,7 @@ import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.service.ManagerService;
 import bestcommerce.brand.manager.service.RoleService;
 import bestcommerce.brand.util.ManagerRole;
+import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.TimeFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class ManageController {
     }
 
     @PostMapping("/register")
-    public void register(@RequestBody ManagerDto managerDto){
+    public ResponseDto register(@RequestBody ManagerDto managerDto){
         Manager registerManager = Manager.builder()
                                         .managerEmail(managerDto.getEmail())
                                         .managerPassword(passwordEncoder.encode(managerDto.getPassword()))
@@ -44,11 +45,7 @@ public class ManageController {
         managerService.saveManager(registerManager);
         Manager manager = managerService.findManager(managerDto.getEmail());
         roleService.addRole(manager.getId(), ManagerRole.NONE.getRole());
-    }
-
-    @GetMapping("/test")
-    public String test(){
-        return "LOGIN SUCCESS";
+        return ResponseDto.builder().message("가입 성공").build();
     }
 
 }
