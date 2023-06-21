@@ -1,6 +1,7 @@
 package bestcommerce.brand.integration;
 
 import bestcommerce.brand.product.dto.ProductCreateDto;
+import bestcommerce.brand.product.dto.ProductRequestDto;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.util.TestUtilService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -22,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
@@ -134,6 +137,18 @@ public class ProductControllerTest {
                         .file(fileList1.get(1))
                         .file(fileList2.get(0))
                         .file(mockDto))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("상품 디테일 조회")
+    @Test
+    void getDetailViewTest() throws Exception{
+        ProductRequestDto dto = ProductRequestDto.builder().productId(3L).build();
+
+        String content = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(post("/product/detail/view").contentType(MediaType.APPLICATION_JSON).content(content))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
