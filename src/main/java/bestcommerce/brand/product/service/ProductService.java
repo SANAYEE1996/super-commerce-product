@@ -1,6 +1,6 @@
 package bestcommerce.brand.product.service;
 
-import bestcommerce.brand.product.dto.ProductDetailDto;
+import bestcommerce.brand.product.dto.ProductInfoDto;
 import bestcommerce.brand.product.entity.Product;
 import bestcommerce.brand.product.repository.ProductRepository;
 import bestcommerce.brand.product.repository.ProductRepositorySupport;
@@ -25,7 +25,11 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    public ProductDetailDto getDetailProduct(Long productId){
+    public ProductInfoDto getDetailProduct(Long productId){
         return productRepositorySupport.getDetailProductDetail(productId);
+    }
+
+    public Product findProduct(Long productId){
+        return productRepository.findById(productId).orElseThrow(()-> new RuntimeException("Not enrolled Product Id"));
     }
 }
