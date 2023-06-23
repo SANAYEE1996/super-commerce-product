@@ -59,46 +59,39 @@ public class ProductControllerTest {
         mockMvc = testUtilService.loginWithJwtToken(mockMvc,objectMapper,restDocumentation);
     }
 
-    @DisplayName("MultipartFile 팡팡 테스트")
+    @DisplayName("상품 저장 테스트")
     @Test
     public void productSaveTest() throws Exception {
         MockMultipartFile file1 = new MockMultipartFile(
                 "productImage",           // 파라미터 이름
-                "bear",                    // 파일 이름
-                "jpg",                          // 파일 타입
-                new FileInputStream(fileLocation+"/bear.jpg")    // 파일 내용
-        );
-
-        MockMultipartFile file2 = new MockMultipartFile(
-                "productImage",           // 파라미터 이름
-                "flowers",                    // 파일 이름
-                "jpg",                          // 파일 타입
-                new FileInputStream(fileLocation+"/flowers.png")      // 파일 내용
+                "deer",                    // 파일 이름
+                "image/jpg",                          // 파일 타입
+                new FileInputStream(fileLocation+"/deer.jpg")    // 파일 내용
         );
 
         MockMultipartFile file3 = new MockMultipartFile(
                 "infoImage",
-                "milk",
-                "jpg",
-                new FileInputStream(fileLocation+"/milk.png")
+                "fauna",
+                "image/jpg",
+                new FileInputStream(fileLocation+"/fauna.jpg")
         );
 
-        List<MockMultipartFile> fileList1 = Arrays.asList(file1, file2);
+        List<MockMultipartFile> fileList1 = Arrays.asList(file1);
         List<MockMultipartFile> fileList2 = Arrays.asList(file3);
 
         List<QuantityDto> quantityDtoList = new ArrayList<>();
         quantityDtoList.add(new QuantityDto("S",100));
         quantityDtoList.add(new QuantityDto("M",100));
         quantityDtoList.add(new QuantityDto("L",100));
-        quantityDtoList.add(new QuantityDto("XL",100));
+        
         ProductCreateDto dto = ProductCreateDto
                                 .builder()
                                 .brandId(1L)
                                 .managerEmail("nike@gmail.com")
-                                .productCode("j1q84zl8")
-                                .productName("나이키 퀀텀 슬립 퀸즈 나이트")
-                                .productPrice(170000)
-                                .productInfo("이것은 나이키의 혁명 나이키는 최고 하지만 나에게 나이키 신발은 없다!")
+                                .productCode("45aq8d6")
+                                .productName("책입니다")
+                                .productPrice(24000)
+                                .productInfo("무슨 책인지는 모릅니다.")
                                 .quantityDtoList(quantityDtoList)
                                 .build();
         MockMultipartFile mockDto = new MockMultipartFile(
@@ -110,9 +103,11 @@ public class ProductControllerTest {
 
         mockMvc.perform(multipart("/product/save")
                         .file(fileList1.get(0))
-                        .file(fileList1.get(1))
                         .file(fileList2.get(0))
                         .file(mockDto))
+                .andDo(document("product/saveProduct",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }

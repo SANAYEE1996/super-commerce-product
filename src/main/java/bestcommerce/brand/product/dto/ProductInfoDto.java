@@ -19,6 +19,8 @@ public class ProductInfoDto {
 
     private String productRegisterDate;
 
+    private String productThumbnail;
+
     private Long brandId;
 
     private String brandName;
@@ -35,5 +37,13 @@ public class ProductInfoDto {
         this.brandId = brandId;
         this.brandName = brandName;
         this.brandLogoImage = brandLogoImage;
+    }
+
+    public ProductInfoDto(Long id, String productName, int productPrice, String productRegisterDate, String productThumbnail){
+        this.id = id;
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productRegisterDate = productRegisterDate;
+        this.productThumbnail = productThumbnail;
     }
 }

@@ -88,16 +88,4 @@ public class ProductController {
         return new ProductDetailDto(productInfoDto, quantityDtoList, sizeDtoList, productImageDtoList);
     }
 
-    @PostMapping(value = "/test")
-    public void test(@RequestPart("productImage") List<MultipartFile> test01,
-                     @RequestPart("infoImage") List<MultipartFile> test02){
-        log.info("success??");
-        for(MultipartFile file : test01){
-            log.info("file .. {}", file.getOriginalFilename());
-        }
-        for(MultipartFile file : test02){
-            log.info("file .. {}", file.getOriginalFilename());
-        }
-    }
-
 }
