@@ -9,4 +9,6 @@ public class ResponseDto {
     private String message;
 
     private ResponseStatus responseStatus;
+
+    private Long productId;
 }

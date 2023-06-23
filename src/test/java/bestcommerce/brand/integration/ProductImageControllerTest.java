@@ -1,8 +1,6 @@
 package bestcommerce.brand.integration;
 
-import bestcommerce.brand.product.dto.ProductCreateDto;
 import bestcommerce.brand.product.dto.ProductRequestDto;
-import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.util.TestUtilService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,28 +8,31 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
-public class ProductControllerTest {
+public class ProductImageControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -45,6 +46,9 @@ public class ProductControllerTest {
     @RegisterExtension
     final RestDocumentationExtension restDocumentation = new RestDocumentationExtension("build/generated-snippets");
 
+    @Value("${testUtil.fileLocation}")
+    private String fileLocation;
+
     @BeforeEach
     void initial(RestDocumentationContextProvider restDocumentation) throws Exception {
         mockMvc = testUtilService.loginWithJwtToken(mockMvc,objectMapper,restDocumentation);
@@ -53,42 +57,45 @@ public class ProductControllerTest {
     @DisplayName("상품 저장 테스트")
     @Test
     public void productSaveTest() throws Exception {
+        MockMultipartFile file1 = new MockMultipartFile(
+                "productImage",           // 파라미터 이름
+                "foxfox",                    // 파일 이름
+                "image/jpg",                          // 파일 타입
+                new FileInputStream(fileLocation+"/foxfox.jpg")    // 파일 내용
+        );
 
-        List<QuantityDto> quantityDtoList = new ArrayList<>();
-        quantityDtoList.add(new QuantityDto("S",30));
-        quantityDtoList.add(new QuantityDto("M",40));
-        quantityDtoList.add(new QuantityDto("L",35));
-        
-        ProductCreateDto dto = ProductCreateDto
-                                .builder()
-                                .brandId(1L)
-                                .managerEmail("nike@gmail.com")
-                                .productCode("23aq8d6")
-                                .productName("화이트 아이보리 크리미 티셔츠")
-                                .productPrice(78000)
-                                .productInfo("무슨 색인지 모르겠는 비싸기만 한 티셔츠.")
-                                .quantityDtoList(quantityDtoList)
-                                .build();
+        MockMultipartFile file3 = new MockMultipartFile(
+                "infoImage",
+                "hay",
+                "image/jpg",
+                new FileInputStream(fileLocation+"/hay.jpg")
+        );
 
-        String content = objectMapper.writeValueAsString(dto);
+        MockMultipartFile file4 = new MockMultipartFile(
+                "infoImage",
+                "space",
+                "image/jpg",
+                new FileInputStream(fileLocation+"/space.jpg")
+        );
 
-        mockMvc.perform(post("/product/save").contentType(MediaType.APPLICATION_JSON).content(content))
-                .andDo(document("product/saveProduct",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint())))
-                .andExpect(status().isOk())
-                .andDo(MockMvcResultHandlers.print());
-    }
+        List<MockMultipartFile> fileList1 = Arrays.asList(file1);
+        List<MockMultipartFile> fileList2 = Arrays.asList(file3,file4);
 
-    @DisplayName("상품 디테일 조회")
-    @Test
-    void getDetailViewTest() throws Exception{
-        ProductRequestDto dto = ProductRequestDto.builder().productId(3L).build();
+        ProductRequestDto dto = ProductRequestDto.builder().productId(7L).build();
 
-        String content = objectMapper.writeValueAsString(dto);
+        MockMultipartFile mockDto = new MockMultipartFile(
+                "ProductRequestDto",
+                "ProductRequestDto",
+                "application/json",
+                objectMapper.writeValueAsString(dto).getBytes(StandardCharsets.UTF_8)
+        );
 
-        mockMvc.perform(post("/product/detail/view").contentType(MediaType.APPLICATION_JSON).content(content))
-                .andDo(document("product/detailView",
+        mockMvc.perform(multipart("/image/product/save")
+                        .file(fileList1.get(0))
+                        .file(fileList2.get(0))
+                        .file(fileList2.get(1))
+                        .file(mockDto))
+                .andDo(document("image/saveProductImage",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())))
                 .andExpect(status().isOk())
