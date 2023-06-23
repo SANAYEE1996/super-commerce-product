@@ -15,16 +15,10 @@ import bestcommerce.brand.size.service.SizeService;
 import bestcommerce.brand.util.DtoConverter;
 import bestcommerce.brand.util.EntityConverter;
 import bestcommerce.brand.util.ResponseDto;
-import bestcommerce.brand.util.ResponseStatus;
-import bestcommerce.brand.util.image.ImageSaveService;
-import com.amazonaws.services.s3.AmazonS3Client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -32,8 +26,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/product")
 public class ProductController {
-
-    private final AmazonS3Client amazonS3Client;
 
     private final BrandService brandService;
 
@@ -45,8 +37,6 @@ public class ProductController {
 
     private final QuantityService quantityService;
 
-    private final ImageSaveService imageSaveService;
-
     private final SizeService sizeService;
 
     private final EntityConverter entityConverter;
@@ -55,27 +45,16 @@ public class ProductController {
 
 
     @PostMapping(value = "/save")
-    public ResponseDto save(@RequestPart(value = "productImage", required = false) List<MultipartFile> productImage,
-                            @RequestPart(value = "infoImage", required = false) List<MultipartFile> infoImage,
-                            @RequestPart(name = "productCreateDto") ProductCreateDto productCreateDto){
+    public ResponseDto save(@RequestBody ProductCreateDto productCreateDto){
         Brand brand = brandService.findBrand(productCreateDto.getBrandId());
         Manager manager = managerService.findManager(productCreateDto.getManagerEmail());
         List<QuantityDto> quantityDtoList = productCreateDto.getQuantityDtoList();
         Long productId = productService.save(entityConverter.toProductEntity(productCreateDto,brand,manager));
-        List<ProductImageDto> productImageDtoList = new ArrayList<>();
-        try {
-            imageSaveService.saveProductImage(amazonS3Client, productId, productImage, infoImage, productImageDtoList);
-        }catch (IOException e){
-            log.error(e.getMessage());
-            productService.delete(productId);
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
-        }
-        productImageService.saveAll(productImageDtoList);
         for(QuantityDto quantityDto : quantityDtoList){
             quantityDto.setProductId(productId);
         }
         quantityService.saveAll(quantityDtoList);
-        return ResponseDto.builder().message("등록 성공").build();
+        return ResponseDto.builder().message("등록 성공").productId(productId).build();
     }
 
     @PostMapping(value = "/detail/view")
