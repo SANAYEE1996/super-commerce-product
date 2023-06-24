@@ -34,4 +34,8 @@ public class ProductService {
     public List<ProductInfoDto> getProductList(String managerEmail){
         return productRepositorySupport.getProductList(managerEmail);
     }
+
+    public List<ProductInfoDto> searchList(String managerEmail, String search){
+        return productRepositorySupport.searchList(managerEmail, search);
+    }
 }

@@ -109,4 +109,19 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @DisplayName("상품 검색 조회")
+    @Test
+    void productSearchTest() throws Exception{
+        ProductRequestDto dto = ProductRequestDto.builder().managerEmail("nike@gmail.com").search("티").build();
+
+        String content = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(post("/product/search").contentType(MediaType.APPLICATION_JSON).content(content))
+                .andDo(document("product/searchList",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
 }

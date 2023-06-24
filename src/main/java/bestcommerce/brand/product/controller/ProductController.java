@@ -72,4 +72,9 @@ public class ProductController {
         return productService.getProductList(dto.getManagerEmail());
     }
 
+    @PostMapping(value = "/search")
+    public List<ProductInfoDto> searchList(@RequestBody ProductRequestDto dto){
+        return productService.searchList(dto.getManagerEmail(), dto.getSearch());
+    }
+
 }

@@ -25,7 +25,7 @@ public class ProductImageService {
     }
 
     public List<ProductImage> getProductImageList(Product product){
-        return productImageRepository.findAllByProduct(product);
+        return productImageRepository.findAllByProductOrderByOdr(product);
     }
 
     public void updateAll(List<ProductImageDto> productImageDtoList){
