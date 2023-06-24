@@ -18,7 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -48,5 +50,32 @@ public class ProductImageController {
         }
         productImageService.saveAll(productImageDtoList);
         return ResponseDto.builder().message("등록 성공").build();
+    }
+
+    @PostMapping(value = "/title/update")
+    public ResponseDto update(@RequestPart(value = "newProductImage", required = false) List<MultipartFile> newProductImage,
+                              @RequestPart(name = "deleteProductImageList") List<ProductImageDto> deleteList,
+                              @RequestPart(name = "updateProductImageList") List<ProductImageDto> updateList,
+                              @RequestPart(name = "ProductRequestDto") ProductRequestDto productRequestDto){
+        Long productId = productService.findProduct(productRequestDto.getProductId()).getId();
+        Set<Integer> updateOdrSet = new HashSet<>();
+        for(ProductImageDto productImageDto : updateList) { updateOdrSet.add(productImageDto.getOdr()); }
+        if(updateOdrSet.size() != updateList.size()){ return ResponseDto.builder().message("Update Order parameter Error").build(); }
+        List<ProductImageDto> imageDtoList = new ArrayList<>();
+        List<Integer> newOdrList = new ArrayList<>();
+        int limitSize = updateList.size() + newProductImage.size();
+        for(int i = 0; i < limitSize; i++){ if(!updateOdrSet.contains(i)) {newOdrList.add(i); }}
+
+        try{
+            imageSaveService.updateProductTitleImage(amazonS3Client, productId, newProductImage, imageDtoList, newOdrList);
+        }catch (IOException e){
+            log.error(e.getMessage());
+            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+        }
+        productImageService.saveAll(imageDtoList);
+        productImageService.updateAll(updateList);
+        productImageService.deleteAll(deleteList);
+
+        return ResponseDto.builder().message("수정 성공").build();
     }
 }
