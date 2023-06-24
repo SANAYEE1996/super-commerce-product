@@ -32,4 +32,30 @@ public class ProductImageBulkRepository {
                     ps.setInt(4, productImageDto.getOdr());
                 });
     }
+
+    @Transactional
+    public void updateAll(List<ProductImageDto> productImageDtoList){
+        String sql = "UPDATE product_img SET odr = ? " +
+                     "WHERE id = ?";
+
+        jdbcTemplate.batchUpdate(sql,
+                productImageDtoList,
+                productImageDtoList.size(),
+                (PreparedStatement ps, ProductImageDto productImageDto) -> {
+                    ps.setInt(1, productImageDto.getOdr());
+                    ps.setLong(2, productImageDto.getImageId());
+                });
+    }
+
+    @Transactional
+    public void deleteAll(List<ProductImageDto> productImageDtoList){
+        String sql = "DELETE FROM product_img WHERE id = ?";
+
+        jdbcTemplate.batchUpdate(sql,
+                productImageDtoList,
+                productImageDtoList.size(),
+                (PreparedStatement ps, ProductImageDto productImageDto) -> {
+                    ps.setLong(1, productImageDto.getImageId());
+                });
+    }
 }

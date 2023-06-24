@@ -1,5 +1,6 @@
 package bestcommerce.brand.integration;
 
+import bestcommerce.brand.product.dto.ProductImageDto;
 import bestcommerce.brand.product.dto.ProductRequestDto;
 import bestcommerce.brand.util.TestUtilService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -78,7 +80,6 @@ public class ProductImageControllerTest {
                 new FileInputStream(fileLocation+"/space.jpg")
         );
 
-        List<MockMultipartFile> fileList1 = Arrays.asList(file1);
         List<MockMultipartFile> fileList2 = Arrays.asList(file3,file4);
 
         ProductRequestDto dto = ProductRequestDto.builder().productId(7L).build();
@@ -91,11 +92,72 @@ public class ProductImageControllerTest {
         );
 
         mockMvc.perform(multipart("/image/product/save")
-                        .file(fileList1.get(0))
+                        .file(file1)
                         .file(fileList2.get(0))
                         .file(fileList2.get(1))
                         .file(mockDto))
                 .andDo(document("image/saveProductImage",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("상품 타이틀 사진 수정")
+    @Test
+    public void updateProductTitleTest() throws Exception {
+        MockMultipartFile file1 = new MockMultipartFile(
+                "newProductImage",           // 파라미터 이름
+                "space",                    // 파일 이름
+                "image/jpg",                          // 파일 타입
+                new FileInputStream(fileLocation+"/space.jpg")    // 파일 내용
+        );
+
+        MockMultipartFile file2 = new MockMultipartFile(
+                "newProductImage",
+                "warbler",
+                "image/jpg",
+                new FileInputStream(fileLocation+"/warbler.jpg")
+        );
+
+        List<MockMultipartFile> fileList1 = Arrays.asList(file1,file2);
+
+        List<ProductImageDto> deleteList = new ArrayList<>();
+        List<ProductImageDto> updateList = new ArrayList<>();
+        ProductRequestDto request = ProductRequestDto.builder().productId(5L).build();
+
+        deleteList.add(ProductImageDto.builder().imageId(13L).build());
+        updateList.add(ProductImageDto.builder().imageId(12L).odr(3).build());
+        updateList.add(ProductImageDto.builder().imageId(14L).odr(1).build());
+
+        MockMultipartFile deleteListDto = new MockMultipartFile(
+                "deleteProductImageList",
+                "deleteProductImageList",
+                "application/json",
+                objectMapper.writeValueAsString(deleteList).getBytes(StandardCharsets.UTF_8)
+        );
+
+        MockMultipartFile updateListDto = new MockMultipartFile(
+                "updateProductImageList",
+                "updateProductImageList",
+                "application/json",
+                objectMapper.writeValueAsString(updateList).getBytes(StandardCharsets.UTF_8)
+        );
+
+        MockMultipartFile requestDto = new MockMultipartFile(
+                "ProductRequestDto",
+                "ProductRequestDto",
+                "application/json",
+                objectMapper.writeValueAsString(request).getBytes(StandardCharsets.UTF_8)
+        );
+
+        mockMvc.perform(multipart("/image/product/title/update")
+                        .file(fileList1.get(0))
+                        .file(fileList1.get(1))
+                        .file(deleteListDto)
+                        .file(updateListDto)
+                        .file(requestDto))
+                .andDo(document("image/titleUpdate",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())))
                 .andExpect(status().isOk())

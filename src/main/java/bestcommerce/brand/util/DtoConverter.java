@@ -29,7 +29,7 @@ public class DtoConverter {
     }
 
     public ProductImageDto toProductImageDto(ProductImage productImage){
-        return new ProductImageDto(productImage.getId(), productImage.getType(), imageHeaderUrl+productImage.getImg(), productImage.getOdr());
+        return new ProductImageDto(productImage.getProduct().getId(), productImage.getId(), productImage.getType(), imageHeaderUrl+productImage.getImg(), productImage.getOdr());
     }
 
     public List<ProductImageDto> toProductImageDtoList(List<ProductImage> productImageList){

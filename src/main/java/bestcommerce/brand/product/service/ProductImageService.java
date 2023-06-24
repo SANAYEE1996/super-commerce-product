@@ -27,4 +27,12 @@ public class ProductImageService {
     public List<ProductImage> getProductImageList(Product product){
         return productImageRepository.findAllByProduct(product);
     }
+
+    public void updateAll(List<ProductImageDto> productImageDtoList){
+        productImageBulkRepository.updateAll(productImageDtoList);
+    }
+
+    public void deleteAll(List<ProductImageDto> productImageDtoList){
+        productImageBulkRepository.deleteAll(productImageDtoList);
+    }
 }
