@@ -67,4 +67,9 @@ public class ProductController {
         return new ProductDetailDto(productInfoDto, quantityDtoList, sizeDtoList, productImageDtoList);
     }
 
+    @PostMapping(value = "/list")
+    public List<ProductInfoDto> productList(@RequestBody ProductRequestDto dto){
+        return productService.getProductList(dto.getManagerEmail());
+    }
+
 }

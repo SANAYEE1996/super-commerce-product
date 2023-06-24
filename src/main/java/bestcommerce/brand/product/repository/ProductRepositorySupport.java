@@ -48,16 +48,14 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                         product.id.as("id"),
                         product.name.as("productName"),
                         product.productPrice.as("productPrice"),
-                        product.info.as("productInfo"),
                         product.registerDate.as("productRegisterDate"),
                         productImage.img.as("productThumbnail")
                 ))
                 .from(product)
-                .innerJoin(productImage)
-                .innerJoin(brand)
-                .innerJoin(manager)
-                .on(manager.managerEmail.eq(managerEmail))
-                .where(productImage.type.eq("TITLE"))
+                .innerJoin(productImage).on(productImage.product.eq(product))
+                .innerJoin(brand).on(product.brand.eq(brand))
+                .innerJoin(manager).on(manager.brand.eq(brand))
+                .where(manager.managerEmail.eq(managerEmail).and(productImage.type.eq("TITLE")).and(productImage.odr.eq(0)))
                 .fetch();
     }
 }

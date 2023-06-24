@@ -94,4 +94,19 @@ public class ProductControllerTest {
                 .andExpect(status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
+
+    @DisplayName("상품 리스트 조회")
+    @Test
+    void getProductListTest() throws Exception{
+        ProductRequestDto dto = ProductRequestDto.builder().managerEmail("nike@gmail.com").build();
+
+        String content = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(post("/product/list").contentType(MediaType.APPLICATION_JSON).content(content))
+                .andDo(document("product/productList",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
 }

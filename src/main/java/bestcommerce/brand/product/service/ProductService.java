@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -21,15 +23,15 @@ public class ProductService {
         return productRepository.save(product).getId();
     }
 
-    public void delete(Long productId){
-        productRepository.deleteById(productId);
-    }
-
     public ProductInfoDto getDetailProduct(Long productId){
         return productRepositorySupport.getDetailProductDetail(productId);
     }
 
     public Product findProduct(Long productId){
         return productRepository.findById(productId).orElseThrow(()-> new RuntimeException("Not enrolled Product Id"));
+    }
+
+    public List<ProductInfoDto> getProductList(String managerEmail){
+        return productRepositorySupport.getProductList(managerEmail);
     }
 }
