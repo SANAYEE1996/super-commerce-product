@@ -34,10 +34,21 @@ public class ImageSaveService {
     private void saveImage(AmazonS3Client amazonS3Client, MultipartFile img, List<ProductImageDto> list, Long productId, String type, int odr) throws IOException {
         String fileName = img.getOriginalFilename() +"_"+ System.currentTimeMillis();
         log.info("file name : {}", fileName);
-        list.add(new ProductImageDto(productId, type, fileName, odr));
+        list.add(new ProductImageDto(productId, 0L, type, fileName, odr));
         ObjectMetadata metadata= new ObjectMetadata();
         metadata.setContentType(img.getContentType());
         metadata.setContentLength(img.getSize());
         amazonS3Client.putObject(bucket,fileName,img.getInputStream(),metadata);
+    }
+
+    public void updateProductTitleImage(AmazonS3Client amazonS3Client,
+                                        Long productId, List<MultipartFile> productImage,
+                                        List<ProductImageDto> imageDtoList, List<Integer> odrList) throws IOException{
+        if(odrList.size() != productImage.size()){
+            throw new IOException("list size is not equal");
+        }
+        for(int i = 0; i < odrList.size(); i++){
+            saveImage(amazonS3Client, productImage.get(i), imageDtoList, productId, "TITLE", odrList.get(i));
+        }
     }
 }
