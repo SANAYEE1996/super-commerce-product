@@ -17,7 +17,7 @@ public class DtoConverter {
     private String imageHeaderUrl;
 
     public QuantityDto toQuantityDto(Quantity quantity){
-        return new QuantityDto(quantity.getMeasureName(), quantity.getRemain());
+        return new QuantityDto(quantity.getId(), quantity.getProduct().getId(), quantity.getMeasureName(), quantity.getRemain());
     }
 
     public List<QuantityDto> toQuantityDtoList(List<Quantity> quantityList){

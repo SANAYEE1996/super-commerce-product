@@ -55,9 +55,9 @@ public class ProductControllerTest {
     public void productSaveTest() throws Exception {
 
         List<QuantityDto> quantityDtoList = new ArrayList<>();
-        quantityDtoList.add(new QuantityDto("S",30));
-        quantityDtoList.add(new QuantityDto("M",40));
-        quantityDtoList.add(new QuantityDto("L",35));
+        quantityDtoList.add(new QuantityDto(0L,0L,"S",30));
+        quantityDtoList.add(new QuantityDto(0L,0L,"M",40));
+        quantityDtoList.add(new QuantityDto(0L,0L,"L",35));
         
         ProductCreateDto dto = ProductCreateDto
                                 .builder()
