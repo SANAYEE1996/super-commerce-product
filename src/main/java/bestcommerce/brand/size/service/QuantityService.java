@@ -42,4 +42,8 @@ public class QuantityService {
             quantityRepository.updateRemainQuantity(quantityDto.getQuantity(), quantityDto.getQuantityId());
         }
     }
+
+    public void deleteAll(List<QuantityDto> quantityDtoList){
+        quantityBulkRepository.deleteAll(quantityDtoList);
+    }
 }
