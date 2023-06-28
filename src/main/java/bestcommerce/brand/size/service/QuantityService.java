@@ -8,6 +8,7 @@ import bestcommerce.brand.size.repository.QuantityRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -30,5 +31,19 @@ public class QuantityService {
 
     public List<Quantity> findQuantityList(Product product){
         return quantityRepository.findAllByProduct(product);
+    }
+
+    public void updateQuantity(List<QuantityDto> quantityDtoList){
+        for (QuantityDto quantityDto : quantityDtoList){
+            if(StringUtils.hasText(quantityDto.getQuantityName())){
+                quantityRepository.updateNameRemainQuantity(quantityDto.getQuantityName(), quantityDto.getQuantity(), quantityDto.getQuantityId());
+                continue;
+            }
+            quantityRepository.updateRemainQuantity(quantityDto.getQuantity(), quantityDto.getQuantityId());
+        }
+    }
+
+    public void deleteAll(List<QuantityDto> quantityDtoList){
+        quantityBulkRepository.deleteAll(quantityDtoList);
     }
 }

@@ -2,8 +2,10 @@ package bestcommerce.brand.product.repository;
 
 import bestcommerce.brand.product.dto.ProductInfoDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,9 @@ import static bestcommerce.brand.product.entity.QProductImage.productImage;
 public class ProductRepositorySupport extends QuerydslRepositorySupport {
 
     private final JPAQueryFactory queryFactory;
+
+    @Value("${img.url.header}")
+    private String imgUrlHeader;
 
     public ProductRepositorySupport(JPAQueryFactory queryFactory) {
         super(ProductInfoDto.class);
@@ -44,18 +49,31 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public List<ProductInfoDto> getProductList(String managerEmail){
+        return listInitial()
+                .where(manager.managerEmail.eq(managerEmail).and(productImage.type.eq("TITLE")).and(productImage.odr.eq(0)))
+                .fetch();
+    }
+
+    public List<ProductInfoDto> searchList(String managerEmail, String search){
+        return listInitial()
+                .where(manager.managerEmail.eq(managerEmail)
+                        .and(productImage.type.eq("TITLE"))
+                        .and(productImage.odr.eq(0))
+                        .and(product.info.contains(search).or(product.name.contains(search))))
+                .fetch();
+    }
+
+    private JPAQuery<ProductInfoDto> listInitial(){
         return queryFactory.select(Projections.constructor(ProductInfoDto.class,
                         product.id.as("id"),
                         product.name.as("productName"),
                         product.productPrice.as("productPrice"),
                         product.registerDate.as("productRegisterDate"),
-                        productImage.img.as("productThumbnail")
+                        productImage.img.prepend(imgUrlHeader).as("productThumbnail")
                 ))
                 .from(product)
                 .innerJoin(productImage).on(productImage.product.eq(product))
                 .innerJoin(brand).on(product.brand.eq(brand))
-                .innerJoin(manager).on(manager.brand.eq(brand))
-                .where(manager.managerEmail.eq(managerEmail).and(productImage.type.eq("TITLE")).and(productImage.odr.eq(0)))
-                .fetch();
+                .innerJoin(manager).on(manager.brand.eq(brand));
     }
 }

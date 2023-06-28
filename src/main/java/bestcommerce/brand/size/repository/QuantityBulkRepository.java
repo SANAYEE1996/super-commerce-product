@@ -31,4 +31,16 @@ public class QuantityBulkRepository {
                     ps.setInt(3, quantityDto.getQuantity());
                 });
     }
+
+    @Transactional
+    public void deleteAll(List<QuantityDto> quantityDtoList){
+        String sql = "DELETE FROM quantity WHERE quantity_id = ? ";
+
+        jdbcTemplate.batchUpdate(sql,
+                quantityDtoList,
+                quantityDtoList.size(),
+                (PreparedStatement ps, QuantityDto quantityDto) -> {
+                    ps.setLong(1, quantityDto.getQuantityId());
+                });
+    }
 }

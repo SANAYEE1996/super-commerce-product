@@ -55,9 +55,9 @@ public class ProductControllerTest {
     public void productSaveTest() throws Exception {
 
         List<QuantityDto> quantityDtoList = new ArrayList<>();
-        quantityDtoList.add(new QuantityDto("S",30));
-        quantityDtoList.add(new QuantityDto("M",40));
-        quantityDtoList.add(new QuantityDto("L",35));
+        quantityDtoList.add(new QuantityDto(0L,0L,"S",30));
+        quantityDtoList.add(new QuantityDto(0L,0L,"M",40));
+        quantityDtoList.add(new QuantityDto(0L,0L,"L",35));
         
         ProductCreateDto dto = ProductCreateDto
                                 .builder()
@@ -104,6 +104,21 @@ public class ProductControllerTest {
 
         mockMvc.perform(post("/product/list").contentType(MediaType.APPLICATION_JSON).content(content))
                 .andDo(document("product/productList",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("상품 검색 조회")
+    @Test
+    void productSearchTest() throws Exception{
+        ProductRequestDto dto = ProductRequestDto.builder().managerEmail("nike@gmail.com").search("티").build();
+
+        String content = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(post("/product/search").contentType(MediaType.APPLICATION_JSON).content(content))
+                .andDo(document("product/searchList",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())))
                 .andExpect(status().isOk())
