@@ -38,4 +38,10 @@ public class ProductService {
     public List<ProductInfoDto> searchList(String managerEmail, String search){
         return productRepositorySupport.searchList(managerEmail, search);
     }
+
+    public void productIdCheck(Long productId) throws RuntimeException{
+        if(!productRepository.existsById(productId)){
+            throw new RuntimeException(productId + " : Product Id is Not Exists");
+        }
+    }
 }

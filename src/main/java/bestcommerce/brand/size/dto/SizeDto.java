@@ -3,20 +3,27 @@ package bestcommerce.brand.size.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Builder
 public class SizeDto {
 
     private Long sizeId;
 
+    @NotNull(message = "quantityId must not Null")
     private Long quantityId;
 
+    @NotBlank(message = "measureName must not Blank")
     private String measureName;
 
     private Long bodyId;
 
+    @NotBlank(message = "bodyName must not Blank")
     private String bodyName;
 
+    @NotBlank(message = "sizeValue must not Blank")
     private String sizeValue;
 
     public SizeDto(Long sizeId, Long quantityId, String measureName, Long bodyId, String bodyName, String sizeValue) {

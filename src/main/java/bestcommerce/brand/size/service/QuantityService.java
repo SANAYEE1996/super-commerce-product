@@ -25,10 +25,6 @@ public class QuantityService {
         quantityBulkRepository.saveAll(quantityDtoList);
     }
 
-    public Long verifyQuantity(Long quantityId){
-        return quantityRepository.findById(quantityId).orElseThrow(()->new RuntimeException("Not enrolled Quantity Id")).getId();
-    }
-
     public List<Quantity> findQuantityList(Product product){
         return quantityRepository.findAllByProduct(product);
     }
@@ -45,5 +41,9 @@ public class QuantityService {
 
     public void deleteAll(List<QuantityDto> quantityDtoList){
         quantityBulkRepository.deleteAll(quantityDtoList);
+    }
+
+    public List<Quantity> findQuantityList(Long productId){
+        return quantityRepository.findAllQuantityByProductId(productId);
     }
 }

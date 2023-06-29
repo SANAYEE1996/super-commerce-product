@@ -25,4 +25,8 @@ public class SizeService {
     public List<SizeDto> getSizeList(Long productId){
         return sizeSearchRepository.getSizeInfoForProductDetail(productId);
     }
+
+    public void deleteAll(Long productId){
+        sizeBulkRepository.deleteAll(productId);
+    }
 }

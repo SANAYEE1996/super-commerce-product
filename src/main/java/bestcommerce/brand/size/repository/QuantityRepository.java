@@ -22,4 +22,7 @@ public interface QuantityRepository extends JpaRepository<Quantity, Long> {
     @Modifying
     @Query("update quantity q set q.remain = :remain where q.id = :id ")
     void updateRemainQuantity(int remain, Long id);
+
+    @Query("select q from quantity  q where q.product.id = :id")
+    List<Quantity> findAllQuantityByProductId(Long id);
 }
