@@ -2,6 +2,7 @@ package bestcommerce.brand.size.controller;
 
 import bestcommerce.brand.product.dto.ProductRequestDto;
 import bestcommerce.brand.product.service.ProductService;
+import bestcommerce.brand.size.dto.SizeApiDto;
 import bestcommerce.brand.size.dto.SizeDto;
 import bestcommerce.brand.size.service.BodyService;
 import bestcommerce.brand.size.service.QuantityService;
@@ -41,10 +42,10 @@ public class SizeController {
     private final DtoValidation dtoValidation;
 
     @PostMapping(value = "/save")
-    public ResponseDto save(@RequestBody List<SizeDto> sizeDtoList, @RequestBody ProductRequestDto request){
+    public ResponseDto save(@RequestBody SizeApiDto dto){
         List<SizeDto> insertSizeDtoList = new ArrayList<>();
         try {
-            saveSize(sizeDtoList,request,insertSizeDtoList);
+            saveSize(dto.getSizeDtoList(),dto.getProductRequestDto(),insertSizeDtoList);
         }catch (RuntimeException e){
             log.error("error : {}", e.getMessage());
             return ResponseDto.builder().message("등록 실패").responseStatus(ResponseStatus.EXCEPTION).build();
@@ -54,15 +55,15 @@ public class SizeController {
     }
 
     @PostMapping(value = "/update")
-    public ResponseDto update(@RequestBody List<SizeDto> sizeDtoList, @RequestBody ProductRequestDto request){
+    public ResponseDto update(@RequestBody SizeApiDto dto){
         List<SizeDto> insertSizeDtoList = new ArrayList<>();
         try {
-            saveSize(sizeDtoList,request,insertSizeDtoList);
+            saveSize(dto.getSizeDtoList(),dto.getProductRequestDto(),insertSizeDtoList);
         }catch (RuntimeException e){
             log.error("error : {}", e.getMessage());
             return ResponseDto.builder().message("수정 실패").responseStatus(ResponseStatus.EXCEPTION).build();
         }
-        sizeService.deleteAll(request.getProductId());
+        sizeService.deleteAll(dto.getProductRequestDto().getProductId());
         sizeService.saveAll(insertSizeDtoList);
         return ResponseDto.builder().message("수정 성공").build();
     }
