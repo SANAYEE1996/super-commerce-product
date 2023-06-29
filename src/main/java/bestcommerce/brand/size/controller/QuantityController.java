@@ -3,7 +3,7 @@ package bestcommerce.brand.size.controller;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.util.ResponseDto;
-import bestcommerce.brand.util.service.QuantityCheck;
+import bestcommerce.brand.util.service.DtoValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,12 +21,12 @@ public class QuantityController {
 
     private final QuantityService quantityService;
 
-    private final QuantityCheck quantityCheck;
+    private final DtoValidation dtoValidation;
 
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestBody List<QuantityDto> dtoList) {
         try {
-            quantityCheck.saveQuantityCheck(dtoList);
+            dtoValidation.saveQuantityCheck(dtoList);
         } catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseDto.builder().message(e.getMessage()).build();
@@ -38,7 +38,7 @@ public class QuantityController {
     @PostMapping(value = "/update")
     public ResponseDto update(@RequestBody List<QuantityDto> updateList) {
         try {
-            quantityCheck.updateDeleteQuantityCheck(updateList);
+            dtoValidation.updateDeleteQuantityCheck(updateList);
         } catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseDto.builder().message(e.getMessage()).build();
@@ -50,7 +50,7 @@ public class QuantityController {
     @PostMapping(value = "/delete")
     public ResponseDto delete(@RequestBody List<QuantityDto> deleteList) {
         try {
-            quantityCheck.updateDeleteQuantityCheck(deleteList);
+            dtoValidation.updateDeleteQuantityCheck(deleteList);
         } catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseDto.builder().message(e.getMessage()).build();

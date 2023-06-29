@@ -31,4 +31,11 @@ public class SizeBulkRepository {
                     ps.setString(3, sizeDto.getSizeValue());
                 });
     }
+
+    @Transactional
+    public void deleteAll(Long productId){
+        String sql = "DELETE s FROM size s INNER JOIN quantity q ON s.quantity_id = q.quantity_id WHERE q.product_id = ? ";
+
+        jdbcTemplate.update(sql, productId);
+    }
 }

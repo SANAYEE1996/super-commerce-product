@@ -1,0 +1,18 @@
+= minlog API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels:2
+:sectlinks:
+
+== size 수정
+
+=== 요청
+
+include::{snippets}/size/updateSize/http-request.adoc[]
+
+=== 응답
+
+
+include::{snippets}/size/updateSize/response-body.adoc[]
