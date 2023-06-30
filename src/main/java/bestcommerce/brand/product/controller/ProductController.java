@@ -77,4 +77,14 @@ public class ProductController {
         return productService.searchList(dto.getManagerEmail(), dto.getSearch());
     }
 
+    @PostMapping(value = "/update")
+    public ResponseDto update(@RequestBody ProductRequestDto dto){
+        return ResponseDto.builder().message("수정 성공").build();
+    }
+
+    @PostMapping(value = "/delete")
+    public ResponseDto delete(@RequestBody ProductRequestDto dto){
+        return ResponseDto.builder().message("삭제 성공").build();
+    }
+
 }
