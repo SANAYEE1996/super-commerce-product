@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Slf4j
@@ -44,4 +45,14 @@ public class ProductService {
             throw new RuntimeException(productId + " : Product Id is Not Exists");
         }
     }
+
+    public void updateProduct(ProductInfoDto dto){
+        productRepositorySupport.updateProductInfo(dto);
+    }
+
+    @Transactional
+    public void deleteProduct(Long id){
+        productRepository.deleteById(id);
+    }
+
 }

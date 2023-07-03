@@ -15,6 +15,7 @@ import bestcommerce.brand.size.service.SizeService;
 import bestcommerce.brand.util.DtoConverter;
 import bestcommerce.brand.util.EntityConverter;
 import bestcommerce.brand.util.ResponseDto;
+import bestcommerce.brand.util.ResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -75,6 +76,32 @@ public class ProductController {
     @PostMapping(value = "/search")
     public List<ProductInfoDto> searchList(@RequestBody ProductRequestDto dto){
         return productService.searchList(dto.getManagerEmail(), dto.getSearch());
+    }
+
+    @PostMapping(value = "/update")
+    public ResponseDto update(@RequestBody ProductInfoDto dto){
+        try {
+            productService.productIdCheck(dto.getId());
+        }catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION) .build();
+        }
+        productService.updateProduct(dto);
+        return ResponseDto.builder().message("수정 성공").build();
+    }
+
+    @PostMapping(value = "/delete")
+    public ResponseDto delete(@RequestBody ProductRequestDto dto){
+        try {
+            productService.productIdCheck(dto.getProductId());
+            quantityService.checkQuantityExistsByProductId(dto.getProductId());
+            productImageService.checkImageExistsByProductId(dto.getProductId());
+        }catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+        }
+        productService.deleteProduct(dto.getProductId());
+        return ResponseDto.builder().message("삭제 성공").build();
     }
 
 }

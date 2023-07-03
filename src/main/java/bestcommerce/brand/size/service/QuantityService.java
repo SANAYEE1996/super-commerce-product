@@ -46,4 +46,10 @@ public class QuantityService {
     public List<Quantity> findQuantityList(Long productId){
         return quantityRepository.findAllQuantityByProductId(productId);
     }
+
+    public void checkQuantityExistsByProductId(Long productId) throws RuntimeException{
+        if(quantityRepository.checkQuantityExistsByProductId(productId) > 0){
+            throw new RuntimeException(productId + " this productId is still exists in Quantity !");
+        }
+    }
 }

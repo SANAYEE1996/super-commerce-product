@@ -17,6 +17,6 @@ public class EntityConverter {
     }
 
     public Product toProductEntity(ProductCreateDto dto, Brand brand, Manager manager){
-        return new Product(0L, dto.getProductCode(), dto.getProductName(), dto.getProductPrice(), dto.getProductInfo(), LocalDateTime.now().format(TimeFormat.timeFormatter), brand, manager);
+        return new Product(0L, dto.getProductCode(), dto.getProductName(), dto.getProductPrice(), dto.getProductInfo(), LocalDateTime.now().format(TimeFormat.timeFormatter), null, brand, manager);
     }
 }
