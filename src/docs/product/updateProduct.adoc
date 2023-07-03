@@ -1,0 +1,18 @@
+= minlog API
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels:2
+:sectlinks:
+
+== 상품 정보 수정
+
+=== 요청
+
+include::{snippets}/product/updateProduct/http-request.adoc[]
+
+=== 응답
+
+
+include::{snippets}/product/updateProduct/response-body.adoc[]

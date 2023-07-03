@@ -35,4 +35,10 @@ public class ProductImageService {
     public void deleteAll(List<ProductImageDto> productImageDtoList){
         productImageBulkRepository.deleteAll(productImageDtoList);
     }
+
+    public void checkImageExistsByProductId(Long productId) throws RuntimeException{
+        if(productImageRepository.checkImageExistsByProductId(productId) > 0){
+            throw new RuntimeException(productId + " this productId is still exists in Image");
+        }
+    }
 }

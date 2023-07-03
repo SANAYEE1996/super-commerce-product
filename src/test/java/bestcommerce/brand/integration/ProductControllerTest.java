@@ -1,6 +1,7 @@
 package bestcommerce.brand.integration;
 
 import bestcommerce.brand.product.dto.ProductCreateDto;
+import bestcommerce.brand.product.dto.ProductInfoDto;
 import bestcommerce.brand.product.dto.ProductRequestDto;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.util.TestUtilService;
@@ -119,6 +120,38 @@ public class ProductControllerTest {
 
         mockMvc.perform(post("/product/search").contentType(MediaType.APPLICATION_JSON).content(content))
                 .andDo(document("product/searchList",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("상품 업데이트 테스트")
+    @Test
+    void productUpdateTest() throws Exception{
+        ProductInfoDto dto = new ProductInfoDto(5L,null,"완전 이쁜 티샤쓰 신상",
+                                        0,null,null,
+                                        null,null,null);
+
+        String content = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(post("/product/update").contentType(MediaType.APPLICATION_JSON).content(content))
+                .andDo(document("product/updateProduct",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .andExpect(status().isOk())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @DisplayName("상품 삭제 테스트")
+    @Test
+    void productDeleteTest() throws Exception{
+        ProductRequestDto dto = ProductRequestDto.builder().productId(8L).build();
+
+        String content = objectMapper.writeValueAsString(dto);
+
+        mockMvc.perform(post("/product/delete").contentType(MediaType.APPLICATION_JSON).content(content))
+                .andDo(document("product/deleteProduct",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())))
                 .andExpect(status().isOk())

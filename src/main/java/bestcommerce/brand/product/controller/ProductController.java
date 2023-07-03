@@ -94,9 +94,11 @@ public class ProductController {
     public ResponseDto delete(@RequestBody ProductRequestDto dto){
         try {
             productService.productIdCheck(dto.getProductId());
+            quantityService.checkQuantityExistsByProductId(dto.getProductId());
+            productImageService.checkImageExistsByProductId(dto.getProductId());
         }catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION) .build();
+            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
         }
         productService.deleteProduct(dto.getProductId());
         return ResponseDto.builder().message("삭제 성공").build();
