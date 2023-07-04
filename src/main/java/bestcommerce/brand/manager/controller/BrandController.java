@@ -5,8 +5,8 @@ import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.service.BrandService;
 import bestcommerce.brand.manager.service.ManagerService;
 import bestcommerce.brand.manager.service.RoleService;
-import bestcommerce.brand.util.EntityConverter;
-import bestcommerce.brand.util.ManagerRole;
+import bestcommerce.brand.util.converter.EntityConverter;
+import bestcommerce.brand.manager.ManagerRole;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
 import bestcommerce.brand.util.exception.DuplicateBrandManagerException;
@@ -54,17 +54,17 @@ public class BrandController {
             roleService.updateRole(manager.getId(), ManagerRole.BRAND_MASTER.getRole());
         } catch (IOException e){
             e.printStackTrace();
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         } catch (DuplicateBrandManagerException e){
             log.error(e.getMessage());
             brandService.deleteBrand(e.getRemoveBrandId());
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         }
 
-        return ResponseDto.builder().message("등록 성공").responseStatus(ResponseStatus.OK).build();
+        return ResponseDto.builder().message("등록 성공").code(ResponseStatus.OK.getStatusCode()).build();
     }
 
     private void validatePossibleBrandRegisterManager(List<String> roleList) throws IOException{

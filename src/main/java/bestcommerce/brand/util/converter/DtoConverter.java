@@ -1,4 +1,4 @@
-package bestcommerce.brand.util;
+package bestcommerce.brand.util.converter;
 
 import bestcommerce.brand.product.dto.ProductImageDto;
 import bestcommerce.brand.product.entity.ProductImage;

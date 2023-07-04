@@ -3,6 +3,7 @@ package bestcommerce.brand.size.controller;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.util.ResponseDto;
+import bestcommerce.brand.util.ResponseStatus;
 import bestcommerce.brand.util.service.DtoValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,10 +30,10 @@ public class QuantityController {
             dtoValidation.saveQuantityCheck(dtoList);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).build();
+            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
         }
         quantityService.saveAll(dtoList);
-        return ResponseDto.builder().message("저장 성공").build();
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("저장 성공").build();
     }
 
     @PostMapping(value = "/update")
@@ -41,10 +42,10 @@ public class QuantityController {
             dtoValidation.updateDeleteQuantityCheck(updateList);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).build();
+            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
         }
         quantityService.updateQuantity(updateList);
-        return ResponseDto.builder().message("수정 성공").build();
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("수정 성공").build();
     }
 
     @PostMapping(value = "/delete")
@@ -53,9 +54,9 @@ public class QuantityController {
             dtoValidation.updateDeleteQuantityCheck(deleteList);
         } catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).build();
+            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
         }
         quantityService.deleteAll(deleteList);
-        return ResponseDto.builder().message("삭제 성공").build();
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("삭제 성공").build();
     }
 }

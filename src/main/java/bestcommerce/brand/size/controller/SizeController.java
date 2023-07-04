@@ -48,10 +48,10 @@ public class SizeController {
             saveSize(dto.getSizeDtoList(),dto.getProductRequestDto(),insertSizeDtoList);
         }catch (RuntimeException e){
             log.error("error : {}", e.getMessage());
-            return ResponseDto.builder().message("등록 실패").responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message("등록 실패").build();
         }
         sizeService.saveAll(insertSizeDtoList);
-        return ResponseDto.builder().message("등록 성공").build();
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("등록 성공").build();
     }
 
     @PostMapping(value = "/update")
@@ -61,11 +61,11 @@ public class SizeController {
             saveSize(dto.getSizeDtoList(),dto.getProductRequestDto(),insertSizeDtoList);
         }catch (RuntimeException e){
             log.error("error : {}", e.getMessage());
-            return ResponseDto.builder().message("수정 실패").responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message("수정 실패").build();
         }
         sizeService.deleteAll(dto.getProductRequestDto().getProductId());
         sizeService.saveAll(insertSizeDtoList);
-        return ResponseDto.builder().message("수정 성공").build();
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("수정 성공").build();
     }
 
     private void saveSize(List<SizeDto> sizeDtoList, ProductRequestDto request, List<SizeDto> insertSizeDtoList) throws RuntimeException{
