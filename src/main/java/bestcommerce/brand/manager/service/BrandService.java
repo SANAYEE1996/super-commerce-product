@@ -18,7 +18,7 @@ public class BrandService {
     }
 
     public Brand findBrand(Long id){
-        return brandRepository.findById(id).orElseThrow(()->new NullPointerException("등록된 브랜드가 아닙니다."));
+        return brandRepository.findById(id).orElseThrow(()->new RuntimeException(id+" : 이 아이디로 등록된 브랜드가 아닙니다."));
     }
 
     public void deleteBrand(Long id){
