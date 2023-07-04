@@ -41,9 +41,9 @@ public class ManagerService {
         }
     }
 
-    public Long saveManager(Manager registerManager){
+    public void saveManager(Manager registerManager){
         if(!managerRepository.existsByManagerEmail(registerManager.getManagerEmail())){
-            return managerRepository.save(registerManager).getId();
+            managerRepository.save(registerManager);
         }
         throw new RuntimeException("등록된 이메일 입니다.");
     }

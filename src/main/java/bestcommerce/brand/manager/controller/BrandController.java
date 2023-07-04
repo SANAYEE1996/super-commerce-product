@@ -10,11 +10,10 @@ import bestcommerce.brand.util.ManagerRole;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
 import bestcommerce.brand.util.exception.DuplicateBrandManagerException;
+import bestcommerce.brand.util.image.ImageSaveService;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -37,26 +36,20 @@ public class BrandController {
 
     private final RoleService roleService;
 
-    private final EntityConverter entityConverter;
+    private final ImageSaveService imageSaveService;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
+    private final EntityConverter entityConverter;
 
     @Transactional
     @PostMapping(value = "/register", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseDto registerBrand(@RequestPart BrandRegisterDto request, @RequestPart MultipartFile img){
-        log.info("file name : {}", img.getOriginalFilename());
-        String fileName = img.getOriginalFilename() +"_"+ System.currentTimeMillis();
-        Manager manager = managerService.findManager(request.getManagerEmail());
-        if(!isBrandRegisterManager(manager)){
-            return ResponseDto.builder().message("등록 할 수 없는 계정").responseStatus(ResponseStatus.OK).build();
-        }
-        try{
-            ObjectMetadata metadata= new ObjectMetadata();
-            metadata.setContentType(img.getContentType());
-            metadata.setContentLength(img.getSize());
-            amazonS3Client.putObject(bucket,fileName,img.getInputStream(),metadata);
 
+        String fileName = img.getOriginalFilename() +"_"+ System.currentTimeMillis();
+
+        try{
+            Manager manager = managerService.findManager(request.getManagerEmail());
+            validatePossibleBrandRegisterManager(manager.getRoles());
+            imageSaveService.saveBrandImage(amazonS3Client,img,fileName);
             managerService.registerBrand(manager,brandService.findBrand(brandService.registerBrand(entityConverter.toBrandEntity(request, fileName))));
             roleService.updateRole(manager.getId(), ManagerRole.BRAND_MASTER.getRole());
         } catch (IOException e){
@@ -66,13 +59,17 @@ public class BrandController {
             log.error(e.getMessage());
             brandService.deleteBrand(e.getRemoveBrandId());
             return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+        } catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
         }
 
         return ResponseDto.builder().message("등록 성공").responseStatus(ResponseStatus.OK).build();
     }
 
-    private boolean isBrandRegisterManager(Manager manager){
-        List<String> roleList = manager.getRoles();
-        return roleList.size() == 1 && roleList.contains(ManagerRole.NONE.getRole());
+    private void validatePossibleBrandRegisterManager(List<String> roleList) throws IOException{
+        if(!(roleList.size() == 1 && roleList.contains(ManagerRole.NONE.getRole()))){
+            throw new IOException("등록 할 수 없는 계정");
+        }
     }
 }

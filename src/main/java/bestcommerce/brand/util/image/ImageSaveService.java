@@ -51,4 +51,12 @@ public class ImageSaveService {
             saveImage(amazonS3Client, productImage.get(i), imageDtoList, productId, "TITLE", odrList.get(i));
         }
     }
+
+    public void saveBrandImage(AmazonS3Client amazonS3Client, MultipartFile img, String fileName) throws IOException{
+        log.info("save file name : {}", fileName);
+        ObjectMetadata metadata= new ObjectMetadata();
+        metadata.setContentType(img.getContentType());
+        metadata.setContentLength(img.getSize());
+        amazonS3Client.putObject(bucket,fileName,img.getInputStream(),metadata);
+    }
 }
