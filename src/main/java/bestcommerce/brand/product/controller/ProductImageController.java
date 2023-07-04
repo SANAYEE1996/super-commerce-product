@@ -7,6 +7,7 @@ import bestcommerce.brand.product.service.ProductService;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
 import bestcommerce.brand.util.image.ImageSaveService;
+import bestcommerce.brand.util.service.DtoValidation;
 import com.amazonaws.services.s3.AmazonS3Client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Slf4j
 @RestController
@@ -35,6 +34,8 @@ public class ProductImageController {
     private final AmazonS3Client amazonS3Client;
 
     private final ProductImageService productImageService;
+
+    private final DtoValidation validate;
 
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestPart(value = "productImage", required = false) List<MultipartFile> productImage,
@@ -57,16 +58,11 @@ public class ProductImageController {
                               @RequestPart(name = "deleteProductImageList") List<ProductImageDto> deleteList,
                               @RequestPart(name = "updateProductImageList") List<ProductImageDto> updateList,
                               @RequestPart(name = "ProductRequestDto") ProductRequestDto productRequestDto){
-        Long productId = productService.findProduct(productRequestDto.getProductId()).getId();
-        Set<Integer> updateOdrSet = new HashSet<>();
-        for(ProductImageDto productImageDto : updateList) { updateOdrSet.add(productImageDto.getOdr()); }
-        if(updateOdrSet.size() != updateList.size()){ return ResponseDto.builder().message("Update Order parameter Error").build(); }
         List<ProductImageDto> imageDtoList = new ArrayList<>();
-        List<Integer> newOdrList = new ArrayList<>();
-        int limitSize = updateList.size() + newProductImage.size();
-        for(int i = 0; i < limitSize; i++){ if(!updateOdrSet.contains(i)) {newOdrList.add(i); }}
-
         try{
+            Long productId = productService.findProduct(productRequestDto.getProductId()).getId();
+            List<Integer> newOdrList = new ArrayList<>();
+            validate.validateImageTitleUpdate(updateList, newOdrList, updateList.size()+newProductImage.size());
             imageSaveService.updateProductTitleImage(amazonS3Client, productId, newProductImage, imageDtoList, newOdrList);
         }catch (IOException e){
             log.error(e.getMessage());

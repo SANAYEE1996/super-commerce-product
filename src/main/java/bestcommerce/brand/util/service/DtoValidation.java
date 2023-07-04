@@ -1,10 +1,13 @@
 package bestcommerce.brand.util.service;
 
+import bestcommerce.brand.product.dto.ProductImageDto;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.size.entity.Quantity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +41,24 @@ public class DtoValidation {
             if(!quantitySet.contains(quantity.getId())){
                 throw new RuntimeException(quantity.getId() +" is not products quantity Id");
             }
+        }
+    }
+
+    public void validateImageTitleUpdate(List<ProductImageDto> updateList, List<Integer> newOdrList, int length) throws IOException{
+        Set<Integer> updateOdrSet = new HashSet<>();
+        for(ProductImageDto productImageDto : updateList) {
+            updateOdrSet.add(productImageDto.getOdr());
+        }
+        if(updateOdrSet.size() != updateList.size()){
+            throw new IOException("Update Order parameter Error");
+        }
+        putNewOdrList(updateOdrSet, newOdrList, length);
+    }
+
+    private void putNewOdrList(Set<Integer> updateOdrSet, List<Integer> newOdrList, int length){
+        for(int i = 0; i < length; i++){
+            if(updateOdrSet.contains(i)) continue;
+            newOdrList.add(i);
         }
     }
 
