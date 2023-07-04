@@ -8,10 +8,10 @@ public enum ResponseStatus {
     OK(200,"OK"),
     EXCEPTION(500,"EXCEPTION");
 
-    private final int statusCode;
+    private final Integer statusCode;
     private final String statusMessage;
 
-    ResponseStatus(int statusCode, String statusMessage) {
+    ResponseStatus(Integer statusCode, String statusMessage) {
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
     }

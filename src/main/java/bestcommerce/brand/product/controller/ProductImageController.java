@@ -47,7 +47,7 @@ public class ProductImageController {
             imageSaveService.saveProductImage(amazonS3Client, productId, productImage, infoImage, productImageDtoList);
         }catch (IOException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         }
         productImageService.saveAll(productImageDtoList);
         return ResponseDto.builder().message("등록 성공").build();
@@ -66,7 +66,7 @@ public class ProductImageController {
             imageSaveService.updateProductTitleImage(amazonS3Client, productId, newProductImage, imageDtoList, newOdrList);
         }catch (IOException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         }
         productImageService.saveAll(imageDtoList);
         productImageService.updateAll(updateList);

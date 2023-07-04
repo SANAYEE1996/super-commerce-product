@@ -12,6 +12,7 @@ import bestcommerce.brand.product.service.ProductService;
 import bestcommerce.brand.size.dto.SizeDto;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.size.service.SizeService;
+import bestcommerce.brand.util.ResponseBody;
 import bestcommerce.brand.util.converter.DtoConverter;
 import bestcommerce.brand.util.converter.EntityConverter;
 import bestcommerce.brand.util.ResponseDto;
@@ -55,27 +56,35 @@ public class ProductController {
             quantityDto.setProductId(productId);
         }
         quantityService.saveAll(quantityDtoList);
-        return ResponseDto.builder().message("등록 성공").productId(productId).build();
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("등록 성공").body(new ResponseBody<>(productId)).build();
     }
 
     @PostMapping(value = "/detail/view")
-    public ProductDetailDto detailView(@RequestBody ProductRequestDto dto){
-        Product product = productService.findProduct(dto.getProductId());
-        ProductInfoDto productInfoDto = productService.getDetailProduct(dto.getProductId());
-        List<QuantityDto> quantityDtoList = dtoConverter.toQuantityDtoList(quantityService.findQuantityList(product));
-        List<SizeDto> sizeDtoList = sizeService.getSizeList(dto.getProductId());
-        List<ProductImageDto> productImageDtoList = dtoConverter.toProductImageDtoList(productImageService.getProductImageList(product));
-        return new ProductDetailDto(productInfoDto, quantityDtoList, sizeDtoList, productImageDtoList);
+    public ResponseDto detailView(@RequestBody ProductRequestDto dto){
+        try {
+            Product product = productService.findProduct(dto.getProductId());
+            ProductInfoDto productInfoDto = productService.getDetailProduct(dto.getProductId());
+            List<QuantityDto> quantityDtoList = dtoConverter.toQuantityDtoList(quantityService.findQuantityList(product));
+            List<SizeDto> sizeDtoList = sizeService.getSizeList(dto.getProductId());
+            List<ProductImageDto> productImageDtoList = dtoConverter.toProductImageDtoList(productImageService.getProductImageList(product));
+            ProductDetailDto productDetail = new ProductDetailDto(productInfoDto, quantityDtoList, sizeDtoList, productImageDtoList);
+            return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("조회 성공").body(new ResponseBody<>(productDetail)).build();
+        }catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
+        }
     }
 
     @PostMapping(value = "/list")
-    public List<ProductInfoDto> productList(@RequestBody ProductRequestDto dto){
-        return productService.getProductList(dto.getManagerEmail());
+    public ResponseDto productList(@RequestBody ProductRequestDto dto){
+        List<ProductInfoDto> productList = productService.getProductList(dto.getManagerEmail());
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("조회 성공").body(new ResponseBody<>(productList)).build();
     }
 
     @PostMapping(value = "/search")
-    public List<ProductInfoDto> searchList(@RequestBody ProductRequestDto dto){
-        return productService.searchList(dto.getManagerEmail(), dto.getSearch());
+    public ResponseDto searchList(@RequestBody ProductRequestDto dto){
+        List<ProductInfoDto> searchList = productService.searchList(dto.getManagerEmail(), dto.getSearch());
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("조회 성공").body(new ResponseBody<>(searchList)).build();
     }
 
     @PostMapping(value = "/update")
@@ -84,7 +93,7 @@ public class ProductController {
             productService.productIdCheck(dto.getId());
         }catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION) .build();
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         }
         productService.updateProduct(dto);
         return ResponseDto.builder().message("수정 성공").build();
@@ -98,7 +107,7 @@ public class ProductController {
             productImageService.checkImageExistsByProductId(dto.getProductId());
         }catch (RuntimeException e){
             log.error(e.getMessage());
-            return ResponseDto.builder().message(e.getMessage()).responseStatus(ResponseStatus.EXCEPTION).build();
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         }
         productService.deleteProduct(dto.getProductId());
         return ResponseDto.builder().message("삭제 성공").build();

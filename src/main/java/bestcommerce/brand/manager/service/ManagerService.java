@@ -28,38 +28,32 @@ public class ManagerService {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public TokenInfo login(String email, String password) {
+    public TokenInfo login(String email, String password) throws RuntimeException{
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(email, password);
-        try {
-            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-            TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
-            log.info("authentication getAuthorities: {}", authentication.getAuthorities());
-            return tokenInfo;
-        }catch (RuntimeException e){
-            e.printStackTrace();
-            return TokenInfo.builder().message(e.getMessage()).build();
-        }
+        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+        log.info("authentication getAuthorities: {}", authentication.getAuthorities());
+        return tokenInfo;
     }
 
-    public void saveManager(Manager registerManager){
-        if(!managerRepository.existsByManagerEmail(registerManager.getManagerEmail())){
-            managerRepository.save(registerManager);
+    public void saveManager(Manager registerManager) throws RuntimeException{
+        if(managerRepository.existsByManagerEmail(registerManager.getManagerEmail())){
+            throw new RuntimeException(registerManager.getManagerEmail() + " : 등록된 이메일 입니다.");
         }
-        throw new RuntimeException("등록된 이메일 입니다.");
+        managerRepository.save(registerManager);
     }
 
     public void registerBrand(Manager manager, Brand brand) throws ManagerException {
-        if(manager.getBrand() == null){
-            manager.registerBrand(brand);
-            updateManager(manager);
-            return;
+        if(manager.getBrand() != null){
+            throw new DuplicateBrandManagerException(brand.getId());
         }
-        throw new DuplicateBrandManagerException(brand.getId());
+        manager.registerBrand(brand);
+        updateManager(manager);
     }
 
 
     public Manager findManager(String email){
-        return managerRepository.findByManagerEmail(email).orElseThrow(()-> new RuntimeException("등록된 사용자가 아닙니다."));
+        return managerRepository.findByManagerEmail(email).orElseThrow(()-> new RuntimeException(email + " : 등록된 사용자의 이메일이 아닙니다."));
     }
 
     private void updateManager(Manager updateManager){
