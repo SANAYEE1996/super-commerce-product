@@ -9,7 +9,7 @@ public enum ManagerRole {
     BRAND_MASTER("BRAND_MASTER"),
     BRAND_MANAGER("BRAND_MANAGER");
 
-    String role;
+    private final String role;
 
     ManagerRole(String role) {
         this.role = role;
