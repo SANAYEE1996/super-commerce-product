@@ -1,4 +1,4 @@
-package bestcommerce.brand.util;
+package bestcommerce.brand.manager;
 
 import lombok.Getter;
 

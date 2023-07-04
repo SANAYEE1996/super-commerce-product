@@ -1,10 +1,11 @@
-package bestcommerce.brand.util;
+package bestcommerce.brand.util.converter;
 
 import bestcommerce.brand.manager.dto.BrandRegisterDto;
 import bestcommerce.brand.manager.entity.Brand;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.product.dto.ProductCreateDto;
 import bestcommerce.brand.product.entity.Product;
+import bestcommerce.brand.util.TimeFormat;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;

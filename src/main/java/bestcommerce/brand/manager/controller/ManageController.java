@@ -6,7 +6,7 @@ import bestcommerce.brand.manager.dto.ManagerDto;
 import bestcommerce.brand.manager.entity.Manager;
 import bestcommerce.brand.manager.service.ManagerService;
 import bestcommerce.brand.manager.service.RoleService;
-import bestcommerce.brand.util.ManagerRole;
+import bestcommerce.brand.manager.ManagerRole;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.TimeFormat;
 import lombok.RequiredArgsConstructor;
