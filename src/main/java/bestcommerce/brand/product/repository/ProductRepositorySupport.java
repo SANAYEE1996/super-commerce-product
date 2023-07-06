@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
