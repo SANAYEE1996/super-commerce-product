@@ -2,7 +2,7 @@ package bestcommerce.brand.size.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity(name = "size")
 @Getter
