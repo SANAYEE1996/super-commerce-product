@@ -6,10 +6,10 @@ import lombok.Getter;
 @Builder
 @Getter
 public class ResponseDto {
-    private Integer code;
 
-    private String message;
+    private final Integer code;
 
-    private ResponseBody<?> body;
+    private final String message;
 
+    private final ResponseBody<?> body;
 }

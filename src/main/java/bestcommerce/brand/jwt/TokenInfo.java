@@ -1,19 +1,8 @@
 package bestcommerce.brand.jwt;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 
 @Builder
-@Getter
-@AllArgsConstructor
-public class TokenInfo {
+public record TokenInfo(String grantType, String accessToken, String refreshToken, String message) {
 
-    private String grantType;
-
-    private String accessToken;
-
-    private String refreshToken;
-
-    private String message;
 }
