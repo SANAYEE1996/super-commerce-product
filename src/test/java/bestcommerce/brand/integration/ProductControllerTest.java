@@ -47,8 +47,8 @@ public class ProductControllerTest {
     final RestDocumentationExtension restDocumentation = new RestDocumentationExtension("build/generated-snippets");
 
     @BeforeEach
-    void initial(RestDocumentationContextProvider restDocumentation) throws Exception {
-        mockMvc = testUtilService.loginWithJwtToken(mockMvc,objectMapper,restDocumentation);
+    void initial(RestDocumentationContextProvider restDocumentation){
+        mockMvc = testUtilService.setRestDocumentation(restDocumentation);
     }
 
     @DisplayName("상품 저장 테스트")

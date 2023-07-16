@@ -1,9 +1,5 @@
 package bestcommerce.brand.product.controller;
 
-import bestcommerce.brand.manager.entity.Brand;
-import bestcommerce.brand.manager.entity.Manager;
-import bestcommerce.brand.manager.service.BrandService;
-import bestcommerce.brand.manager.service.ManagerService;
 import bestcommerce.brand.product.dto.*;
 import bestcommerce.brand.product.entity.Product;
 import bestcommerce.brand.size.dto.QuantityDto;
@@ -29,10 +25,6 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
 
-    private final BrandService brandService;
-
-    private final ManagerService managerService;
-
     private final ProductService productService;
 
     private final ProductImageService productImageService;
@@ -48,10 +40,8 @@ public class ProductController {
 
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestBody ProductCreateDto productCreateDto){
-        Brand brand = brandService.findBrand(productCreateDto.getBrandId());
-        Manager manager = managerService.findManager(productCreateDto.getManagerEmail());
         List<QuantityDto> quantityDtoList = productCreateDto.getQuantityDtoList();
-        Long productId = productService.save(entityConverter.toProductEntity(productCreateDto,brand,manager));
+        Long productId = productService.save(entityConverter.toProductEntity(productCreateDto,productCreateDto.getBrandId(),productCreateDto.getManagerId()));
         for(QuantityDto quantityDto : quantityDtoList){
             quantityDto.setProductId(productId);
         }

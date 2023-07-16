@@ -19,8 +19,6 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static bestcommerce.brand.manager.entity.QBrand.brand;
-import static bestcommerce.brand.manager.entity.QManager.manager;
 import static bestcommerce.brand.product.entity.QProduct.product;
 import static bestcommerce.brand.product.entity.QProductImage.productImage;
 
@@ -45,13 +43,9 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                     product.name.as("productName"),
                     product.productPrice.as("productPrice"),
                     product.info.as("productInfo"),
-                    product.registerDate.as("productRegisterDate"),
-                    brand.id.as("brandId"),
-                    brand.name.as("brandName"),
-                    brand.logo.as("brandLogoImage")
+                    product.registerDate.as("productRegisterDate")
                 ))
                 .from(product)
-                .innerJoin(product.brand, brand)
                 .where(product.id.eq(productId)).fetchOne();
     }
 
@@ -63,8 +57,7 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
 
     public List<ProductInfoDto> searchList(String managerEmail, String search){
         return listInitial()
-                .where(manager.managerEmail.eq(managerEmail)
-                        .and(productImage.type.eq("TITLE"))
+                .where(productImage.type.eq("TITLE")
                         .and(productImage.odr.eq(0))
                         .and(product.info.contains(search).or(product.name.contains(search))))
                 .fetch();
@@ -89,8 +82,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 ))
                 .from(product)
                 .innerJoin(productImage).on(productImage.product.eq(product))
-                .innerJoin(brand).on(product.brand.eq(brand))
-                .innerJoin(manager).on(manager.brand.eq(brand));
     }
 
     private void setUpdateProductBuilder(ProductInfoDto dto, UpdateClause<JPAUpdateClause> builder){

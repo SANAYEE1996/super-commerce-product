@@ -12,6 +12,8 @@ public class ProductCreateDto {
 
     private Long brandId;
 
+    private Long managerId;
+
     private String managerEmail;
 
     private String productCode;
