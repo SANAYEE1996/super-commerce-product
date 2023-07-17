@@ -47,8 +47,8 @@ public class ProductControllerTest {
     final RestDocumentationExtension restDocumentation = new RestDocumentationExtension("build/generated-snippets");
 
     @BeforeEach
-    void initial(RestDocumentationContextProvider restDocumentation) throws Exception {
-        mockMvc = testUtilService.loginWithJwtToken(mockMvc,objectMapper,restDocumentation);
+    void initial(RestDocumentationContextProvider restDocumentation){
+        mockMvc = testUtilService.setRestDocumentation(restDocumentation);
     }
 
     @DisplayName("상품 저장 테스트")
@@ -99,7 +99,7 @@ public class ProductControllerTest {
     @DisplayName("상품 리스트 조회")
     @Test
     void getProductListTest() throws Exception{
-        ProductRequestDto dto = ProductRequestDto.builder().managerEmail("nike@gmail.com").build();
+        ProductRequestDto dto = ProductRequestDto.builder().brandId(1L).build();
 
         String content = objectMapper.writeValueAsString(dto);
 
@@ -114,7 +114,7 @@ public class ProductControllerTest {
     @DisplayName("상품 검색 조회")
     @Test
     void productSearchTest() throws Exception{
-        ProductRequestDto dto = ProductRequestDto.builder().managerEmail("nike@gmail.com").search("티").build();
+        ProductRequestDto dto = ProductRequestDto.builder().brandId(1L).search("티").build();
 
         String content = objectMapper.writeValueAsString(dto);
 

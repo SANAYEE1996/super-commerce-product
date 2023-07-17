@@ -7,9 +7,9 @@ import lombok.Getter;
 @Builder
 public class ProductRequestDto {
 
-    private String managerEmail;
-
     private Long productId;
 
     private String search;
+
+    private Long brandId;
 }

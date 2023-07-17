@@ -1,10 +1,10 @@
-package bestcommerce.brand.manager.entity;
+package bestcommerce.brand.product.entity;
 
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,14 +34,5 @@ public class Brand {
     private String registerDate;
 
     @OneToMany(mappedBy = "brand")
-    private List<Manager> managerList = new ArrayList<>();
-
-    public Brand(Long id, String name, String intro, String address, String logo, String registerDate) {
-        this.id = id;
-        this.name = name;
-        this.intro = intro;
-        this.address = address;
-        this.logo = logo;
-        this.registerDate = registerDate;
-    }
+    private List<Product> productList = new ArrayList<>();
 }

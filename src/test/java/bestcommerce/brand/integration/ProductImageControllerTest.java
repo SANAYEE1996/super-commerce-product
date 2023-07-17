@@ -52,8 +52,8 @@ public class ProductImageControllerTest {
     private String fileLocation;
 
     @BeforeEach
-    void initial(RestDocumentationContextProvider restDocumentation) throws Exception {
-        mockMvc = testUtilService.loginWithJwtToken(mockMvc,objectMapper,restDocumentation);
+    void initial(RestDocumentationContextProvider restDocumentation){
+        mockMvc = testUtilService.setRestDocumentation(restDocumentation);
     }
 
     @DisplayName("상품 저장 테스트")
