@@ -36,11 +36,9 @@ public class Product {
     @Column(name = "modify_date")
     private String modifyDate;
 
-    @Column(name = "brand_id")
-    private Long brandId;
-
-    @Column(name = "manager_id")
-    private Long managerId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "brand_id")
+    private Brand brand;
 
     @OneToMany(mappedBy = "product")
     private List<Quantity> quantityList = new ArrayList<>();
@@ -48,7 +46,7 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private List<ProductImage> imageList = new ArrayList<>();
 
-    public Product(Long id, String productCode, String name, int productPrice, String info, String registerDate, String modifyDate, Long brand, Long manager) {
+    public Product(Long id, String productCode, String name, int productPrice, String info, String registerDate, String modifyDate, Brand brand) {
         this.id = id;
         this.productCode = productCode;
         this.name = name;
@@ -56,7 +54,6 @@ public class Product {
         this.info = info;
         this.registerDate = registerDate;
         this.modifyDate = modifyDate;
-        this.brandId = brand;
-        this.managerId = manager;
+        this.brand = brand;
     }
 }

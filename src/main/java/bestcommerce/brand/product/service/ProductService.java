@@ -32,12 +32,12 @@ public class ProductService {
         return productRepository.findById(productId).orElseThrow(()-> new RuntimeException("Not enrolled Product Id"));
     }
 
-    public List<ProductInfoDto> getProductList(String managerEmail){
-        return productRepositorySupport.getProductList(managerEmail);
+    public List<ProductInfoDto> getProductList(Long brandId){
+        return productRepositorySupport.getProductList(brandId);
     }
 
-    public List<ProductInfoDto> searchList(String managerEmail, String search){
-        return productRepositorySupport.searchList(managerEmail, search);
+    public List<ProductInfoDto> searchList(Long brandId, String search){
+        return productRepositorySupport.searchList(brandId, search);
     }
 
     public void productIdCheck(Long productId) throws RuntimeException{

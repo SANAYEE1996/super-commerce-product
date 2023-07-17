@@ -2,6 +2,7 @@ package bestcommerce.brand.product.controller;
 
 import bestcommerce.brand.product.dto.*;
 import bestcommerce.brand.product.entity.Product;
+import bestcommerce.brand.product.service.BrandService;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.product.service.ProductImageService;
 import bestcommerce.brand.product.service.ProductService;
@@ -27,6 +28,8 @@ public class ProductController {
 
     private final ProductService productService;
 
+    private final BrandService brandService;
+
     private final ProductImageService productImageService;
 
     private final QuantityService quantityService;
@@ -40,13 +43,18 @@ public class ProductController {
 
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestBody ProductCreateDto productCreateDto){
-        List<QuantityDto> quantityDtoList = productCreateDto.getQuantityDtoList();
-        Long productId = productService.save(entityConverter.toProductEntity(productCreateDto,productCreateDto.getBrandId(),productCreateDto.getManagerId()));
-        for(QuantityDto quantityDto : quantityDtoList){
-            quantityDto.setProductId(productId);
+        try {
+            List<QuantityDto> quantityDtoList = productCreateDto.getQuantityDtoList();
+            Long productId = productService.save(entityConverter.toProductEntity(productCreateDto, brandService.findBrand(productCreateDto.getBrandId())));
+            for(QuantityDto quantityDto : quantityDtoList){
+                quantityDto.setProductId(productId);
+            }
+            quantityService.saveAll(quantityDtoList);
+            return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("등록 성공").body(new ResponseBody<>(productId)).build();
+        }catch (RuntimeException e){
+            log.error(e.getMessage());
+            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
         }
-        quantityService.saveAll(quantityDtoList);
-        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("등록 성공").body(new ResponseBody<>(productId)).build();
     }
 
     @PostMapping(value = "/detail/view")
@@ -67,13 +75,13 @@ public class ProductController {
 
     @PostMapping(value = "/list")
     public ResponseDto productList(@RequestBody ProductRequestDto dto){
-        List<ProductInfoDto> productList = productService.getProductList(dto.getManagerEmail());
+        List<ProductInfoDto> productList = productService.getProductList(dto.getBrandId());
         return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("조회 성공").body(new ResponseBody<>(productList)).build();
     }
 
     @PostMapping(value = "/search")
     public ResponseDto searchList(@RequestBody ProductRequestDto dto){
-        List<ProductInfoDto> searchList = productService.searchList(dto.getManagerEmail(), dto.getSearch());
+        List<ProductInfoDto> searchList = productService.searchList(dto.getBrandId(), dto.getSearch());
         return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("조회 성공").body(new ResponseBody<>(searchList)).build();
     }
 

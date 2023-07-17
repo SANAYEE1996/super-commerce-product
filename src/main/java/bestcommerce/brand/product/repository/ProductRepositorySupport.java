@@ -19,6 +19,7 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static bestcommerce.brand.product.entity.QBrand.brand;
 import static bestcommerce.brand.product.entity.QProduct.product;
 import static bestcommerce.brand.product.entity.QProductImage.productImage;
 
@@ -43,23 +44,29 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                     product.name.as("productName"),
                     product.productPrice.as("productPrice"),
                     product.info.as("productInfo"),
-                    product.registerDate.as("productRegisterDate")
+                    product.registerDate.as("productRegisterDate"),
+                    brand.id.as("brandId"),
+                    brand.name.as("brandName"),
+                    brand.logo.prepend(imgUrlHeader).as("brandLogoImage")
                 ))
                 .from(product)
+                .leftJoin(product.brand, brand)
                 .where(product.id.eq(productId)).fetchOne();
     }
 
-    public List<ProductInfoDto> getProductList(String managerEmail){
-        return listInitial()
-                .where(manager.managerEmail.eq(managerEmail).and(productImage.type.eq("TITLE")).and(productImage.odr.eq(0)))
+    public List<ProductInfoDto> getProductList(Long brandId){
+        return listInitial(brandId)
+                .where(productImage.type.eq("TITLE").and(productImage.odr.eq(0)))
                 .fetch();
     }
 
-    public List<ProductInfoDto> searchList(String managerEmail, String search){
-        return listInitial()
+    public List<ProductInfoDto> searchList(Long brandId, String search){
+        return listInitial(brandId)
                 .where(productImage.type.eq("TITLE")
                         .and(productImage.odr.eq(0))
-                        .and(product.info.contains(search).or(product.name.contains(search))))
+                        .and(product.info.contains(search)
+                            .or(product.name.contains(search))
+                            .or(brand.name.contains(search))))
                 .fetch();
     }
 
@@ -72,7 +79,7 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         builder.where(product.id.eq(dto.getId())).execute();
     }
 
-    private JPAQuery<ProductInfoDto> listInitial(){
+    private JPAQuery<ProductInfoDto> listInitial(Long brandId){
         return queryFactory.select(Projections.constructor(ProductInfoDto.class,
                         product.id.as("id"),
                         product.name.as("productName"),
@@ -82,6 +89,7 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 ))
                 .from(product)
                 .innerJoin(productImage).on(productImage.product.eq(product))
+                .innerJoin(product.brand).on(product.brand.id.eq(brandId));
     }
 
     private void setUpdateProductBuilder(ProductInfoDto dto, UpdateClause<JPAUpdateClause> builder){
