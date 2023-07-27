@@ -1,6 +1,7 @@
 package bestcommerce.brand.size.repository;
 
 import bestcommerce.brand.size.dto.QuantityDto;
+import bestcommerce.brand.size.dto.QuantityModifyDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -33,13 +34,13 @@ public class QuantityBulkRepository {
     }
 
     @Transactional
-    public void deleteAll(List<QuantityDto> quantityDtoList){
+    public void deleteAll(List<QuantityModifyDto> quantityDtoList){
         String sql = "DELETE FROM quantity WHERE quantity_id = ? ";
 
         jdbcTemplate.batchUpdate(sql,
                 quantityDtoList,
                 quantityDtoList.size(),
-                (PreparedStatement ps, QuantityDto quantityDto) -> {
+                (PreparedStatement ps, QuantityModifyDto quantityDto) -> {
                     ps.setLong(1, quantityDto.getQuantityId());
                 });
     }

@@ -1,5 +1,6 @@
 package bestcommerce.brand.size.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,17 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class QuantityDto {
+public class QuantityModifyDto {
 
+    @NotNull(message = "quantityId must not Null")
     private Long quantityId;
-
-    private Long productId;
 
     private String quantityName;
 
     private int quantity;
-
-    public void setProductId(Long productId){
-        this.productId = productId;
-    }
 }
