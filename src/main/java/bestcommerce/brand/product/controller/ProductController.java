@@ -111,4 +111,9 @@ public class ProductController {
         return ResponseDto.builder().message("삭제 성공").build();
     }
 
+    @PostMapping(value = "/sync")
+    public ResponseDto sync(){
+        return ResponseDto.builder().message("삭제 성공").build();
+    }
+
 }
