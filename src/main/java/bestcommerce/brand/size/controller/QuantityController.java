@@ -1,6 +1,7 @@
 package bestcommerce.brand.size.controller;
 
 import bestcommerce.brand.size.dto.QuantityDto;
+import bestcommerce.brand.size.dto.QuantityModifyDto;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
@@ -37,25 +38,13 @@ public class QuantityController {
     }
 
     @PostMapping(value = "/update")
-    public ResponseDto update(@RequestBody List<QuantityDto> updateList) {
-        try {
-            dtoValidation.updateDeleteQuantityCheck(updateList);
-        } catch (RuntimeException e){
-            log.error(e.getMessage());
-            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
-        }
+    public ResponseDto update(@RequestBody List<QuantityModifyDto> updateList) {
         quantityService.updateQuantity(updateList);
         return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("수정 성공").build();
     }
 
     @PostMapping(value = "/delete")
-    public ResponseDto delete(@RequestBody List<QuantityDto> deleteList) {
-        try {
-            dtoValidation.updateDeleteQuantityCheck(deleteList);
-        } catch (RuntimeException e){
-            log.error(e.getMessage());
-            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
-        }
+    public ResponseDto delete(@RequestBody List<QuantityModifyDto> deleteList) {
         quantityService.deleteAll(deleteList);
         return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("삭제 성공").build();
     }

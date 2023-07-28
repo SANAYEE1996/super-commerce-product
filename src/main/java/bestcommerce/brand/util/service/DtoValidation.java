@@ -25,18 +25,11 @@ public class DtoValidation {
         }
     }
 
-    public void updateDeleteQuantityCheck(List<QuantityDto> dtoList) throws RuntimeException{
-        for(QuantityDto quantityDto : dtoList){
-            if(quantityDto.getQuantityId() == null) {
-                throw new RuntimeException("Quantity Id is Null");
-            }
-        }
-    }
-
     public void sizeQuantityCheck(List<Quantity> quantityList, Set<Long> quantitySet) throws RuntimeException{
         if(quantityList.size() != quantitySet.size()){
             throw new RuntimeException("input quantity id and product's quantity id size is different !");
         }
+
         for(Quantity quantity : quantityList){
             if(!quantitySet.contains(quantity.getId())){
                 throw new RuntimeException(quantity.getId() +" is not products quantity Id");

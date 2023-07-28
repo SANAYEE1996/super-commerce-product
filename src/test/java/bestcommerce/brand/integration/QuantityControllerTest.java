@@ -1,6 +1,7 @@
 package bestcommerce.brand.integration;
 
 import bestcommerce.brand.size.dto.QuantityDto;
+import bestcommerce.brand.size.dto.QuantityModifyDto;
 import bestcommerce.brand.util.TestUtilService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -68,9 +69,9 @@ public class QuantityControllerTest {
     @DisplayName("수량 수정 테스트")
     @Test
     void updateQuantityTest() throws Exception{
-        List<QuantityDto> dtoList = new ArrayList<>();
-        dtoList.add(new QuantityDto(21L,7L,"XS",50));
-        dtoList.add(new QuantityDto(22L,7L,"",70));
+        List<QuantityModifyDto> dtoList = new ArrayList<>();
+        dtoList.add(new QuantityModifyDto(21L,"XS",50));
+        dtoList.add(new QuantityModifyDto(22L,"",70));
 
         String content = objectMapper.writeValueAsString(dtoList);
 
@@ -85,9 +86,9 @@ public class QuantityControllerTest {
     @DisplayName("수량 삭제 테스트")
     @Test
     void deleteQuantityTest() throws Exception{
-        List<QuantityDto> dtoList = new ArrayList<>();
-        dtoList.add(new QuantityDto(21L,null,"",0));
-        dtoList.add(new QuantityDto(22L,null,"",0));
+        List<QuantityModifyDto> dtoList = new ArrayList<>();
+        dtoList.add(new QuantityModifyDto(21L,"",0));
+        dtoList.add(new QuantityModifyDto(22L,"",0));
 
         String content = objectMapper.writeValueAsString(dtoList);
 

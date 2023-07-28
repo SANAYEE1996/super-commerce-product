@@ -1,6 +1,5 @@
 package bestcommerce.brand.size.controller;
 
-import bestcommerce.brand.product.dto.ProductRequestDto;
 import bestcommerce.brand.product.service.ProductService;
 import bestcommerce.brand.size.dto.SizeApiDto;
 import bestcommerce.brand.size.dto.SizeDto;
@@ -45,7 +44,10 @@ public class SizeController {
     public ResponseDto save(@RequestBody SizeApiDto dto){
         List<SizeDto> insertSizeDtoList = new ArrayList<>();
         try {
-            saveSize(dto.getSizeDtoList(),dto.getProductRequestDto(),insertSizeDtoList);
+            Set<Long> quantitySet = new HashSet<>();
+            productService.productIdCheck(dto.getProductRequestDto().getProductId());
+            putService.putSizeList(bodyService, dto.getSizeDtoList(), insertSizeDtoList, quantitySet);
+            dtoValidation.sizeQuantityCheck(quantityService.findQuantityList(dto.getProductRequestDto().getProductId()),quantitySet);
         }catch (RuntimeException e){
             log.error("error : {}", e.getMessage());
             return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message("등록 실패").build();
@@ -58,7 +60,10 @@ public class SizeController {
     public ResponseDto update(@RequestBody SizeApiDto dto){
         List<SizeDto> insertSizeDtoList = new ArrayList<>();
         try {
-            saveSize(dto.getSizeDtoList(),dto.getProductRequestDto(),insertSizeDtoList);
+            Set<Long> quantitySet = new HashSet<>();
+            productService.productIdCheck(dto.getProductRequestDto().getProductId());
+            putService.putSizeList(bodyService,dto.getSizeDtoList(), insertSizeDtoList, quantitySet);
+            dtoValidation.sizeQuantityCheck(quantityService.findQuantityList(dto.getProductRequestDto().getProductId()),quantitySet);
         }catch (RuntimeException e){
             log.error("error : {}", e.getMessage());
             return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message("수정 실패").build();
@@ -66,12 +71,5 @@ public class SizeController {
         sizeService.deleteAll(dto.getProductRequestDto().getProductId());
         sizeService.saveAll(insertSizeDtoList);
         return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("수정 성공").build();
-    }
-
-    private void saveSize(List<SizeDto> sizeDtoList, ProductRequestDto request, List<SizeDto> insertSizeDtoList) throws RuntimeException{
-        Set<Long> quantitySet = new HashSet<>();
-        productService.productIdCheck(request.getProductId());
-        putService.putSizeList(bodyService,sizeDtoList, insertSizeDtoList, quantitySet);
-        dtoValidation.sizeQuantityCheck(quantityService.findQuantityList(request.getProductId()),quantitySet);
     }
 }

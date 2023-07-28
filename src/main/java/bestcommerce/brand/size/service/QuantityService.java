@@ -2,6 +2,7 @@ package bestcommerce.brand.size.service;
 
 import bestcommerce.brand.product.entity.Product;
 import bestcommerce.brand.size.dto.QuantityDto;
+import bestcommerce.brand.size.dto.QuantityModifyDto;
 import bestcommerce.brand.size.entity.Quantity;
 import bestcommerce.brand.size.repository.QuantityBulkRepository;
 import bestcommerce.brand.size.repository.QuantityRepository;
@@ -29,8 +30,8 @@ public class QuantityService {
         return quantityRepository.findAllByProduct(product);
     }
 
-    public void updateQuantity(List<QuantityDto> quantityDtoList){
-        for (QuantityDto quantityDto : quantityDtoList){
+    public void updateQuantity(List<QuantityModifyDto> quantityDtoList){
+        for (QuantityModifyDto quantityDto : quantityDtoList){
             if(StringUtils.hasText(quantityDto.getQuantityName())){
                 quantityRepository.updateNameRemainQuantity(quantityDto.getQuantityName(), quantityDto.getQuantity(), quantityDto.getQuantityId());
                 continue;
@@ -39,7 +40,7 @@ public class QuantityService {
         }
     }
 
-    public void deleteAll(List<QuantityDto> quantityDtoList){
+    public void deleteAll(List<QuantityModifyDto> quantityDtoList){
         quantityBulkRepository.deleteAll(quantityDtoList);
     }
 
