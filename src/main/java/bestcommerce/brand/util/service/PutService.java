@@ -20,4 +20,11 @@ public class PutService {
             sizeInsertList.add(SizeDto.builder().quantityId(sizeInsertDto.getQuantityId()).bodyId(bodyMap.get(bodyName)).sizeValue(sizeInsertDto.getSizeValue()).build());
         }
     }
+
+    public void putNewOdrList(Set<Integer> updateOdrSet, List<Integer> newOdrList, int length){
+        for(int i = 0; i < length; i++){
+            if(updateOdrSet.contains(i)) continue;
+            newOdrList.add(i);
+        }
+    }
 }
