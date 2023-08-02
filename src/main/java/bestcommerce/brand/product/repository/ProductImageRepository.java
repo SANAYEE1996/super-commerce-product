@@ -11,6 +11,9 @@ public interface ProductImageRepository extends JpaRepository<ProductImage, Long
 
     List<ProductImage> findAllByProductOrderByOdr(Product product);
 
+    @Query("select p from product_img p where p.product.id = :id order by p.odr")
+    List<ProductImage> findAllProductImagesByProductIdOrderByOdr(Long id);
+
     @Query("select count(*) from product_img p where p.product.id = :id")
     int checkImageExistsByProductId(Long id);
 }

@@ -28,6 +28,10 @@ public class ProductImageService {
         return productImageRepository.findAllByProductOrderByOdr(product);
     }
 
+    public List<ProductImage> getProductImageList(Long productId){
+        return productImageRepository.findAllProductImagesByProductIdOrderByOdr(productId);
+    }
+
     public void updateAll(List<ProductImageDto> productImageDtoList){
         productImageBulkRepository.updateAll(productImageDtoList);
     }
