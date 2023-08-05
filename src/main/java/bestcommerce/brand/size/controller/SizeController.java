@@ -10,6 +10,7 @@ import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
 import bestcommerce.brand.util.service.DtoValidation;
 import bestcommerce.brand.util.service.PutService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,5 +72,11 @@ public class SizeController {
         sizeService.deleteAll(dto.getProductRequestDto().getProductId());
         sizeService.saveAll(insertSizeDtoList);
         return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("수정 성공").build();
+    }
+
+    @PostMapping(value = "/test")
+    public ResponseDto test(@RequestBody @Valid SizeDto sizeDto){
+        System.out.println(sizeDto.getQuantityId());
+        return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("ㅇㅇ").build();
     }
 }
