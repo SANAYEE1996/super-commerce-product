@@ -8,6 +8,7 @@ import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
 import bestcommerce.brand.util.image.ImageSaveService;
 import bestcommerce.brand.util.service.DtoValidation;
+import bestcommerce.brand.util.service.PutService;
 import com.amazonaws.services.s3.AmazonS3Client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -36,6 +39,8 @@ public class ProductImageController {
     private final ProductImageService productImageService;
 
     private final DtoValidation validate;
+
+    private final PutService putService;
 
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestPart(value = "productImage", required = false) List<MultipartFile> productImage,
@@ -62,7 +67,9 @@ public class ProductImageController {
         try{
             Long productId = productService.findProduct(productRequestDto.getProductId()).getId();
             List<Integer> newOdrList = new ArrayList<>();
-            validate.validateImageTitleUpdate(updateList, newOdrList, updateList.size()+newProductImage.size());
+            Set<Integer> updateOdrSet = new HashSet<>();
+            validate.validateImageTitleUpdate(updateList, updateOdrSet);
+            putService.putNewOdrList(updateOdrSet, newOdrList, updateList.size()+newProductImage.size());
             imageSaveService.updateProductTitleImage(amazonS3Client, productId, newProductImage, imageDtoList, newOdrList);
         }catch (IOException e){
             log.error(e.getMessage());

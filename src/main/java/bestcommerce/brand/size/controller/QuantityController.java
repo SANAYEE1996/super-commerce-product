@@ -5,7 +5,6 @@ import bestcommerce.brand.size.dto.QuantityModifyDto;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
-import bestcommerce.brand.util.service.DtoValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,16 +22,8 @@ public class QuantityController {
 
     private final QuantityService quantityService;
 
-    private final DtoValidation dtoValidation;
-
     @PostMapping(value = "/save")
     public ResponseDto save(@RequestBody List<QuantityDto> dtoList) {
-        try {
-            dtoValidation.saveQuantityCheck(dtoList);
-        } catch (RuntimeException e){
-            log.error(e.getMessage());
-            return ResponseDto.builder().code(ResponseStatus.EXCEPTION.getStatusCode()).message(e.getMessage()).build();
-        }
         quantityService.saveAll(dtoList);
         return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("저장 성공").build();
     }
