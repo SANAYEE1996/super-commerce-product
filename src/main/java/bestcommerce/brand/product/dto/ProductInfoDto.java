@@ -1,10 +1,12 @@
 package bestcommerce.brand.product.dto;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
+@ToString
 public class ProductInfoDto {
 
     private Long id;
@@ -46,4 +48,5 @@ public class ProductInfoDto {
         this.productRegisterDate = productRegisterDate;
         this.productThumbnail = productThumbnail;
     }
+
 }

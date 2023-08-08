@@ -1,6 +1,8 @@
 package bestcommerce.brand.util.converter;
 
 import bestcommerce.brand.product.dto.ProductImageDto;
+import bestcommerce.brand.product.dto.ProductInfoDto;
+import bestcommerce.brand.product.entity.Product;
 import bestcommerce.brand.product.entity.ProductImage;
 import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.size.entity.Quantity;
@@ -38,5 +40,23 @@ public class DtoConverter {
             productImageDtoList.add(toProductImageDto(productImage));
         }
         return productImageDtoList;
+    }
+
+    public List<ProductInfoDto> toProductInfoDtoList(List<Product> productList){
+        List<ProductInfoDto> productInfoDtoList = new ArrayList<>();
+        for(Product product : productList){
+            productInfoDtoList.add(toProductInfoDto(product));
+        }
+        return productInfoDtoList;
+    }
+
+    public ProductInfoDto toProductInfoDto(Product product){
+        return ProductInfoDto.builder()
+                .id(product.getId())
+                .productName(product.getName())
+                .productPrice(product.getProductPrice())
+                .productInfo(product.getInfo())
+                .productRegisterDate(product.getRegisterDate())
+                .build();
     }
 }
