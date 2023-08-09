@@ -2,6 +2,7 @@ package bestcommerce.brand.product.service;
 
 import bestcommerce.brand.product.dto.ProductInfoDto;
 import bestcommerce.brand.product.entity.Product;
+import bestcommerce.brand.product.repository.ProductBulkRepository;
 import bestcommerce.brand.product.repository.ProductRepository;
 import bestcommerce.brand.product.repository.ProductRepositorySupport;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     private final ProductRepositorySupport productRepositorySupport;
+
+    private final ProductBulkRepository productBulkRepository;
 
     public Long save(Product product){
         return productRepository.save(product).getId();
@@ -57,5 +60,9 @@ public class ProductService {
 
     public List<Product> findAllProduct(){
         return productRepository.findAll();
+    }
+
+    public void saveAll(List<ProductInfoDto> productInfoDtoList){
+        productBulkRepository.saveAll(productInfoDtoList);
     }
 }
