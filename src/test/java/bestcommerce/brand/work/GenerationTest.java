@@ -5,6 +5,8 @@ import bestcommerce.brand.product.entity.Brand;
 import bestcommerce.brand.product.entity.Product;
 import bestcommerce.brand.product.service.BrandService;
 import bestcommerce.brand.product.service.ProductService;
+import bestcommerce.brand.size.dto.QuantityDto;
+import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.util.converter.DtoConverter;
 import bestcommerce.brand.util.work.GenerateRandomString;
 import org.json.simple.JSONArray;
@@ -27,6 +29,9 @@ public class GenerationTest {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private QuantityService quantityService;
 
     @Autowired
     private BrandService brandService;
@@ -75,7 +80,16 @@ public class GenerationTest {
     void generateQuantityTest(){
         List<ProductInfoDto> productInfoDtoList = dtoConverter.toProductInfoDtoList(productService.getSampleList(5L));
 
+        List<QuantityDto> quantityDtoList = new ArrayList<>();
 
+        for(ProductInfoDto productInfoDto : productInfoDtoList){
+            List<String> quantities = generateRandomString.getRandomQuantityList((int)(Math.random()*3));
+            for(String s : quantities){
+                quantityDtoList.add(new QuantityDto(null, productInfoDto.getId(), s, (int)((Math.random()*10000)+1)));
+            }
+        }
 
+        System.out.println(quantityDtoList.size());
+        quantityService.saveAll(quantityDtoList);
     }
 }

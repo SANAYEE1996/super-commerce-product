@@ -35,18 +35,22 @@ public class GenerateRandomString {
     }
 
     public List<String> getRandomQuantityList(int a){
-        List<String> quantityList = new ArrayList<>();
         if(!(0 <= a && a <= 2)){
             return Arrays.asList(typeA);
         }
-
-        return quantityList;
+        if(a == 0){
+            return setList(typeA);
+        }
+        else if(a == 1){
+            return setList(typeB);
+        }
+        return setList(typeC);
     }
 
-    private void setList(){
-        int count = (int)(Math.random()*typeA.length);
-        int start = (int)(Math.random()*(typeA.length - count));
-        Arrays.asList(typeA);
+    private List<String> setList(String[] a){
+        int count = (int)(Math.random()*a.length);
+        int start = (int)(Math.random()*(a.length - count));
+        return Arrays.asList(Arrays.copyOfRange(a,start, start+count));
     }
 
 }
