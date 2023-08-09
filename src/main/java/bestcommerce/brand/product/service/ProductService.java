@@ -65,4 +65,8 @@ public class ProductService {
     public void saveAll(List<ProductInfoDto> productInfoDtoList){
         productBulkRepository.saveAll(productInfoDtoList);
     }
+
+    public List<Product> getSampleList(Long id){
+        return productRepository.findAllByIdIsGreaterThan(id);
+    }
 }
