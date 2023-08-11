@@ -53,4 +53,8 @@ public class QuantityService {
             throw new RuntimeException(productId + " this productId is still exists in Quantity !");
         }
     }
+
+    public List<Quantity> sampleList(Long id){
+        return quantityRepository.findAllByIdIsGreaterThanEqualOrderById(id);
+    }
 }
