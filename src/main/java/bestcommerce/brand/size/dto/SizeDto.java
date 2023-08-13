@@ -5,11 +5,9 @@ import lombok.Getter;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 public class SizeDto {
 
     private Long sizeId;

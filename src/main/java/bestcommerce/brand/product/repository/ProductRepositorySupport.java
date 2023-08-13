@@ -37,7 +37,7 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         this.queryFactory = queryFactory;
     }
 
-    public ProductInfoDto getDetailProductDetail(Long productId){
+    public ProductInfoDto getDetailProduct(Long productId){
         return queryFactory.select(Projections.constructor(ProductInfoDto.class,
                     product.id.as("id"),
                     product.productCode.as("productCode"),
