@@ -6,7 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-@ToString
 public class ProductInfoDto {
 
     private Long id;

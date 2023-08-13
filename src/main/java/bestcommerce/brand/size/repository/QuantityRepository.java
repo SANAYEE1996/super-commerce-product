@@ -29,5 +29,4 @@ public interface QuantityRepository extends JpaRepository<Quantity, Long> {
     @Query("select count(*) from quantity q where q.product.id = :id")
     int checkQuantityExistsByProductId(Long id);
 
-    List<Quantity> findAllByIdIsGreaterThanEqualOrderById(Long id);
 }

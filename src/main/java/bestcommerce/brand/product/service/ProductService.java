@@ -28,7 +28,7 @@ public class ProductService {
     }
 
     public ProductInfoDto getDetailProduct(Long productId){
-        return productRepositorySupport.getDetailProductDetail(productId);
+        return productRepositorySupport.getDetailProduct(productId);
     }
 
     public Product findProduct(Long productId){
@@ -58,15 +58,8 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    public List<Product> findAllProduct(){
-        return productRepository.findAll();
-    }
-
     public void saveAll(List<ProductInfoDto> productInfoDtoList){
         productBulkRepository.saveAll(productInfoDtoList);
     }
 
-    public List<Product> getSampleList(Long id){
-        return productRepository.findAllByIdIsGreaterThan(id);
-    }
 }
