@@ -2,6 +2,7 @@ package bestcommerce.brand.size.repository;
 
 import bestcommerce.brand.size.dto.SizeDto;
 import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -26,6 +27,15 @@ public class SizeSearchRepository extends QuerydslRepositorySupport {
     }
 
     public List<SizeDto> getSizeInfoForProductDetail(Long productId){
+        return listInitial()
+                .on(product.id.eq(productId)).fetch();
+    }
+
+    public List<SizeDto> findAll(){
+        return listInitial().fetch();
+    }
+
+    private JPAQuery<SizeDto> listInitial(){
         return queryFactory.select(Projections.constructor(SizeDto.class,
                         size.id.as("sizeId"),
                         quantity.id.as("quantityId"),
@@ -35,9 +45,8 @@ public class SizeSearchRepository extends QuerydslRepositorySupport {
                         size.value.as("sizeValue")
                 ))
                 .from(size)
-                .leftJoin(size.quantity, quantity)
-                .leftJoin(size.body, body)
-                .leftJoin(quantity.product, product)
-                .on(product.id.eq(productId)).fetch();
+                .innerJoin(size.quantity, quantity)
+                .innerJoin(size.body, body)
+                .innerJoin(quantity.product, product);
     }
 }
