@@ -1,4 +1,4 @@
-package bestcommerce.brand.work;
+package bestcommerce.brand.util;
 
 import bestcommerce.brand.product.dto.ProductDetailDto;
 import bestcommerce.brand.product.dto.ProductImageDto;
@@ -11,46 +11,41 @@ import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.size.service.SizeService;
 import bestcommerce.brand.util.converter.DtoConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SpringBootTest
-public class WorkTest {
+@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/admin")
+public class MainController {
+
+    private final ProductService productService;
+
+    private final QuantityService quantityService;
+
+    private final DtoConverter dtoConverter;
+
+    private final SizeService sizeService;
+
+    private final ProductImageService productImageService;
+
+    private final ObjectMapper objectMapper;
 
     @Value("${testUtil.fileLocation}")
-    private String fileLocation;
+    private static String fileLocation;
 
-    @Autowired
-    private ProductService productService;
-
-    @Autowired
-    private QuantityService quantityService;
-
-    @Autowired
-    private SizeService sizeService;
-
-    @Autowired
-    private ProductImageService productImageService;
-
-    @Autowired
-    private DtoConverter dtoConverter;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-
-    @Test
-    @DisplayName("파일 저장 작업")
-    void writeTest() throws IOException {
-        Long brandId = 1L;
+    @GetMapping(value = "/save")
+    public void save() throws IOException {
         List<ProductInfoDto> productInfoDtoList = productService.getAllDetailProduct();
         List<ProductDetailDto> productDetailDtoList = new ArrayList<>();
         for(ProductInfoDto productInfoDto : productInfoDtoList){
@@ -68,5 +63,4 @@ public class WorkTest {
         file.flush();
         file.close();
     }
-
 }

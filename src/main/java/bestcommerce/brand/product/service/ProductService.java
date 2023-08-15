@@ -62,4 +62,7 @@ public class ProductService {
         productBulkRepository.saveAll(productInfoDtoList);
     }
 
+    public List<ProductInfoDto> getAllDetailProduct(){
+        return productRepositorySupport.getAllDetailProduct();
+    }
 }
