@@ -38,20 +38,13 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public ProductInfoDto getDetailProduct(Long productId){
-        return queryFactory.select(Projections.constructor(ProductInfoDto.class,
-                    product.id.as("id"),
-                    product.productCode.as("productCode"),
-                    product.name.as("productName"),
-                    product.productPrice.as("productPrice"),
-                    product.info.as("productInfo"),
-                    product.registerDate.as("productRegisterDate"),
-                    brand.id.as("brandId"),
-                    brand.name.as("brandName"),
-                    brand.logo.prepend(imgUrlHeader).as("brandLogoImage")
-                ))
-                .from(product)
-                .leftJoin(product.brand, brand)
+        return listInitial()
                 .where(product.id.eq(productId)).fetchOne();
+    }
+
+    public List<ProductInfoDto> getAllDetailProduct(){
+        return listInitial()
+                .fetch();
     }
 
     public List<ProductInfoDto> getProductList(Long brandId){
@@ -77,6 +70,22 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
         setUpdateProductBuilder(dto,builder);
         builder.set(product.modifyDate, LocalDateTime.now().format(TimeFormat.timeFormatter));
         builder.where(product.id.eq(dto.getId())).execute();
+    }
+
+    private JPAQuery<ProductInfoDto> listInitial(){
+        return queryFactory.select(Projections.constructor(ProductInfoDto.class,
+                        product.id.as("id"),
+                        product.productCode.as("productCode"),
+                        product.name.as("productName"),
+                        product.productPrice.as("productPrice"),
+                        product.info.as("productInfo"),
+                        product.registerDate.as("productRegisterDate"),
+                        brand.id.as("brandId"),
+                        brand.name.as("brandName"),
+                        brand.logo.prepend(imgUrlHeader).as("brandLogoImage")
+                ))
+                .from(product)
+                .innerJoin(product.brand, brand);
     }
 
     private JPAQuery<ProductInfoDto> listInitial(Long brandId){

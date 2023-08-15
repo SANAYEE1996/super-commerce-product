@@ -45,4 +45,8 @@ public class ProductImageService {
             throw new RuntimeException(productId + " this productId is still exists in Image");
         }
     }
+
+    public List<ProductImage> findAll(){
+        return productImageRepository.findAll();
+    }
 }
