@@ -25,6 +25,11 @@ public class SyncService {
                         .mutate()
                         .build();
 
-        ResponseDto responseDto = webClient.post().uri("/product/detail").bodyValue("").retrieve().bodyToMono(ResponseDto.class).block();
+        ResponseDto responseDto = webClient
+                .post()
+                .uri("/product/detail")
+                .bodyValue("")
+                .retrieve()
+                .bodyToMono(ResponseDto.class).block();
     }
 }
