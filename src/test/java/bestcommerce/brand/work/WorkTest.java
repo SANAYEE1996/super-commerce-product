@@ -46,11 +46,12 @@ public class WorkTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @Test
     @DisplayName("파일 저장 작업")
     void writeTest() throws IOException {
         Long brandId = 1L;
-        List<ProductInfoDto> productInfoDtoList = productService.getProductList(brandId);
+        List<ProductInfoDto> productInfoDtoList = productService.getAllDetailProduct();
         List<ProductDetailDto> productDetailDtoList = new ArrayList<>();
         for(ProductInfoDto productInfoDto : productInfoDtoList){
             Long productId = productInfoDto.getId();
@@ -67,4 +68,5 @@ public class WorkTest {
         file.flush();
         file.close();
     }
+
 }
