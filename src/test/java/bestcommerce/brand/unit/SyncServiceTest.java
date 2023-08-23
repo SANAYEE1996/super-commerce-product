@@ -9,15 +9,13 @@ import bestcommerce.brand.size.dto.QuantityDto;
 import bestcommerce.brand.size.dto.SizeDto;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.size.service.SizeService;
+import bestcommerce.brand.util.WebClientUtil;
 import bestcommerce.brand.util.converter.DtoConverter;
-import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -25,9 +23,6 @@ import java.util.List;
 
 @SpringBootTest
 public class SyncServiceTest {
-
-    @Value("${item.url}")
-    private String itemUrl;
 
     @Autowired
     private ProductService productService;
@@ -44,21 +39,19 @@ public class SyncServiceTest {
     @Autowired
     private DtoConverter dtoConverter;
 
-    private WebClient webClient;
+    @Autowired
+    private WebClientUtil webClientUtil;
+
+    private WebClient itemWebClient;
 
     @BeforeEach
     void init(){
-        webClient = WebClient.builder()
-                .baseUrl(itemUrl)
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .build()
-                .mutate()
-                .build();
+        itemWebClient = webClientUtil.create();
     }
 
     @Test
     void getTest(){
-        String responseDto = webClient
+        String responseDto = itemWebClient
                 .get()
                 .uri("/product/detail?id=product_1085")
                 .retrieve()
@@ -66,7 +59,7 @@ public class SyncServiceTest {
 
         System.out.println(responseDto);
 
-        responseDto = webClient
+        responseDto = itemWebClient
                 .get()
                 .uri("/product/all?page=10&size=20")
                 .retrieve()
@@ -85,7 +78,7 @@ public class SyncServiceTest {
         List<ProductImageDto> productImageDtoList = dtoConverter.toProductImageDtoList(productImageService.getProductImageList(productId));
         ProductDetailDto productDetailDto = new ProductDetailDto(proInfo, quantityDtoList, sizeDtoList, productImageDtoList);
 
-        String responseDto = webClient
+        String responseDto = itemWebClient
                 .post()
                 .uri("/admin/save")
                 .bodyValue(productDetailDto)
