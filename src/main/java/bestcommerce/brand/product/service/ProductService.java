@@ -61,8 +61,4 @@ public class ProductService {
     public void saveAll(List<ProductInfoDto> productInfoDtoList){
         productBulkRepository.saveAll(productInfoDtoList);
     }
-
-    public List<ProductInfoDto> getAllDetailProduct(){
-        return productRepositorySupport.getAllDetailProduct();
-    }
 }

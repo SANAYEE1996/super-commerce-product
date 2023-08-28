@@ -29,8 +29,4 @@ public class SizeService {
     public void deleteAll(Long productId){
         sizeBulkRepository.deleteAll(productId);
     }
-
-    public List<SizeDto> findAll(){
-        return sizeSearchRepository.findAll();
-    }
 }
