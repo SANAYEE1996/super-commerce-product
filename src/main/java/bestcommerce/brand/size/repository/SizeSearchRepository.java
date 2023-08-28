@@ -31,10 +31,6 @@ public class SizeSearchRepository extends QuerydslRepositorySupport {
                 .on(product.id.eq(productId)).fetch();
     }
 
-    public List<SizeDto> findAll(){
-        return listInitial().fetch();
-    }
-
     private JPAQuery<SizeDto> listInitial(){
         return queryFactory.select(Projections.constructor(SizeDto.class,
                         size.id.as("sizeId"),

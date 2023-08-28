@@ -42,11 +42,6 @@ public class ProductRepositorySupport extends QuerydslRepositorySupport {
                 .where(product.id.eq(productId)).fetchOne();
     }
 
-    public List<ProductInfoDto> getAllDetailProduct(){
-        return listInitial()
-                .fetch();
-    }
-
     public List<ProductInfoDto> getProductList(Long brandId){
         return listInitial(brandId)
                 .where(productImage.type.eq("TITLE").and(productImage.odr.eq(0)))
