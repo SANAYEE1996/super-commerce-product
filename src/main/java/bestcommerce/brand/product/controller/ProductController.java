@@ -7,16 +7,14 @@ import bestcommerce.brand.product.service.ProductImageService;
 import bestcommerce.brand.product.service.ProductService;
 import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.size.service.SizeService;
-import bestcommerce.brand.sync.SyncService;
 import bestcommerce.brand.util.ResponseBody;
 import bestcommerce.brand.util.converter.DtoConverter;
 import bestcommerce.brand.util.converter.EntityConverter;
 import bestcommerce.brand.util.ResponseDto;
 import bestcommerce.brand.util.ResponseStatus;
-import bestcommerce.brand.util.service.CombinationService;
+import bestcommerce.brand.product.service.ProductUtilService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.parser.ParseException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,9 +39,7 @@ public class ProductController {
 
     private final DtoConverter dtoConverter;
 
-    private final SyncService syncService;
-
-    private final CombinationService combinationService;
+    private final ProductUtilService productUtilService = new ProductUtilService(productService,quantityService,sizeService,productImageService,dtoConverter);
 
 
     @PostMapping(value = "/save")
@@ -65,7 +61,7 @@ public class ProductController {
     @PostMapping(value = "/detail/view")
     public ResponseDto detailView(@RequestBody ProductRequestDto dto){
         try {
-            ProductDetailDto productDetailDto = combinationService.findProductDetail(productService,quantityService,sizeService,productImageService,dtoConverter, dto.getProductId());
+            ProductDetailDto productDetailDto = productUtilService.findProductDetail(dto.getProductId());
             return ResponseDto.builder().code(ResponseStatus.OK.getStatusCode()).message("조회 성공").body(new ResponseBody<>(productDetailDto)).build();
         }catch (RuntimeException e){
             log.error(e.getMessage());
@@ -90,9 +86,7 @@ public class ProductController {
         try {
             productService.productIdCheck(dto.getId());
             productService.updateProduct(dto);
-            ProductDetailDto productDetailDto = combinationService.findProductDetail(productService,quantityService,sizeService,productImageService,dtoConverter, dto.getId());
-            syncService.syncToItemServiceForUpdate(productDetailDto);
-        }catch (RuntimeException | ParseException e){
+        }catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         }
@@ -111,11 +105,6 @@ public class ProductController {
         }
         productService.deleteProduct(dto.getProductId());
         return ResponseDto.builder().message("삭제 성공").build();
-    }
-
-    @PostMapping(value = "/sync")
-    public ResponseDto sync(){
-        return ResponseDto.builder().message("싱크 성공").build();
     }
 
 }

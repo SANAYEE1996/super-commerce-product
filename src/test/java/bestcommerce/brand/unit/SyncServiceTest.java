@@ -7,7 +7,7 @@ import bestcommerce.brand.size.service.QuantityService;
 import bestcommerce.brand.size.service.SizeService;
 import bestcommerce.brand.sync.SyncService;
 import bestcommerce.brand.util.converter.DtoConverter;
-import bestcommerce.brand.util.service.CombinationService;
+import bestcommerce.brand.product.service.ProductUtilService;
 import org.json.simple.parser.ParseException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,14 +35,13 @@ public class SyncServiceTest {
     @Autowired
     private DtoConverter dtoConverter;
 
-    @Autowired
-    private CombinationService combinationService;
+    private ProductUtilService productUtilService = new ProductUtilService(productService,quantityService,sizeService,productImageService,dtoConverter);
 
     @Test
     @DisplayName("잘 통신하는지 테스트")
     void adminUpdateSyncTest(){
         Long productId = 1234L;
-        ProductDetailDto productDetailDto = combinationService.findProductDetail(productService,quantityService,sizeService,productImageService,dtoConverter,productId);
+        ProductDetailDto productDetailDto = productUtilService.findProductDetail(productId);
 
         try {
             syncService.syncToItemServiceForUpdate(productDetailDto);
