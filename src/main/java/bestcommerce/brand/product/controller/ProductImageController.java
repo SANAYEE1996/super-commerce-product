@@ -9,7 +9,6 @@ import bestcommerce.brand.util.ResponseStatus;
 import bestcommerce.brand.util.image.ImageSaveService;
 import bestcommerce.brand.util.service.DtoValidation;
 import bestcommerce.brand.util.service.PutService;
-import com.amazonaws.services.s3.AmazonS3Client;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +33,6 @@ public class ProductImageController {
 
     private final ImageSaveService imageSaveService;
 
-    private final AmazonS3Client amazonS3Client;
-
     private final ProductImageService productImageService;
 
     private final DtoValidation validate;
@@ -49,7 +46,7 @@ public class ProductImageController {
         Long productId = productService.findProduct(productRequestDto.getProductId()).getId();
         List<ProductImageDto> productImageDtoList = new ArrayList<>();
         try {
-            imageSaveService.saveProductImage(amazonS3Client, productId, productImage, infoImage, productImageDtoList);
+            imageSaveService.saveProductImage(productId, productImage, infoImage, productImageDtoList);
         }catch (IOException e){
             log.error(e.getMessage());
             return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
@@ -70,7 +67,7 @@ public class ProductImageController {
             Set<Integer> updateOdrSet = new HashSet<>();
             validate.validateImageTitleUpdate(updateList, updateOdrSet);
             putService.putNewOdrList(updateOdrSet, newOdrList, updateList.size()+newProductImage.size());
-            imageSaveService.updateProductTitleImage(amazonS3Client, productId, newProductImage, imageDtoList, newOdrList);
+            imageSaveService.updateProductTitleImage(productId, newProductImage, imageDtoList, newOdrList);
         }catch (IOException e){
             log.error(e.getMessage());
             return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
