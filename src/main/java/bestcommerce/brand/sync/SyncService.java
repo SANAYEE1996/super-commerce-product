@@ -10,6 +10,8 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -17,13 +19,32 @@ public class SyncService {
 
     private final WebClientUtil webClientUtil;
 
-    public void syncToItemServiceForUpdate(ProductDetailDto productDetailDto) throws ParseException, RuntimeException {
-        WebClient webClient = webClientUtil.create();
+    private final WebClient webClient = webClientUtil.create();
+
+    public void syncToItemService(ProductDetailDto productDetailDto) throws ParseException, RuntimeException {
 
         String responseDto = webClient
                 .post()
                 .uri("/admin/save")
                 .bodyValue(productDetailDto)
+                .retrieve()
+                .bodyToMono(String.class).block();
+
+        JSONObject jsonObj = (JSONObject) new JSONParser().parse(responseDto);
+
+        String syncResponseStatus = jsonObj.get("code").toString();
+
+        if(!"200".equals(syncResponseStatus)){
+            throw new RuntimeException("동기화 실패");
+        }
+    }
+
+    public void syncBatchToItemService(List<ProductDetailDto> productDetailDtoList) throws ParseException, RuntimeException {
+
+        String responseDto = webClient
+                .post()
+                .uri("/admin/saveAll")
+                .bodyValue(productDetailDtoList)
                 .retrieve()
                 .bodyToMono(String.class).block();
 

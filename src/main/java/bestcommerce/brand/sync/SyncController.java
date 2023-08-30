@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -39,11 +41,22 @@ public class SyncController {
 
 
     @PostMapping(value = "/product")
-    public ResponseDto update(@RequestBody ProductInfoDto dto){
+    public ResponseDto syncOne(@RequestBody ProductInfoDto dto){
         try {
             productService.productIdCheck(dto.getId());
-            syncService.syncToItemServiceForUpdate(productUtilService.findProductDetail(dto.getId()));
+            syncService.syncToItemService(productUtilService.findProductDetail(dto.getId()));
         }catch (RuntimeException | ParseException e){
+            log.error(e.getMessage());
+            return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
+        }
+        return ResponseDto.builder().message("수정 성공").code(ResponseStatus.OK.getStatusCode()).build();
+    }
+
+    @PostMapping(value = "/products")
+    public ResponseDto syncBatch(@RequestBody List<ProductInfoDto> productInfoDtoList){
+        try {
+
+        }catch (RuntimeException e){
             log.error(e.getMessage());
             return ResponseDto.builder().message(e.getMessage()).code(ResponseStatus.EXCEPTION.getStatusCode()).build();
         }

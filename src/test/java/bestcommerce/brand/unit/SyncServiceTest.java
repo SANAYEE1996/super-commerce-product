@@ -44,7 +44,7 @@ public class SyncServiceTest {
         ProductDetailDto productDetailDto = productUtilService.findProductDetail(productId);
 
         try {
-            syncService.syncToItemServiceForUpdate(productDetailDto);
+            syncService.syncToItemService(productDetailDto);
         }catch (RuntimeException | ParseException e){
             System.out.println(e.getMessage());
             System.out.println("실패");
