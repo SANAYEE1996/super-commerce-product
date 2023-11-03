@@ -9,8 +9,8 @@ import bestcommerce.brand.size.entity.Quantity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DtoConverter {
@@ -23,11 +23,7 @@ public class DtoConverter {
     }
 
     public List<QuantityDto> toQuantityDtoList(List<Quantity> quantityList){
-        List<QuantityDto> quantityDtoList = new ArrayList<>();
-        for(Quantity quantity : quantityList){
-            quantityDtoList.add(toQuantityDto(quantity));
-        }
-        return quantityDtoList;
+        return quantityList.stream().map(this::toQuantityDto).collect(Collectors.toList());
     }
 
     public ProductImageDto toProductImageDto(ProductImage productImage){
@@ -35,19 +31,11 @@ public class DtoConverter {
     }
 
     public List<ProductImageDto> toProductImageDtoList(List<ProductImage> productImageList){
-        List<ProductImageDto> productImageDtoList = new ArrayList<>();
-        for(ProductImage productImage : productImageList){
-            productImageDtoList.add(toProductImageDto(productImage));
-        }
-        return productImageDtoList;
+        return productImageList.stream().map(this::toProductImageDto).collect(Collectors.toList());
     }
 
     public List<ProductInfoDto> toProductInfoDtoList(List<Product> productList){
-        List<ProductInfoDto> productInfoDtoList = new ArrayList<>();
-        for(Product product : productList){
-            productInfoDtoList.add(toProductInfoDto(product));
-        }
-        return productInfoDtoList;
+        return productList.stream().map(this::toProductInfoDto).collect(Collectors.toList());
     }
 
     public ProductInfoDto toProductInfoDto(Product product){
